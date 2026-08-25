@@ -1,0 +1,26 @@
+INSTRUCCIONES DE USO - WIN FIDELIZACIONES
+=========================================
+
+PASO 1
+------
+Descargue y extraiga esta carpeta (si la descargó como archivo .zip).
+
+PASO 2
+------
+Para iniciar la plataforma, haga doble clic en el archivo:
+WIN_FIDELIZACIONES.exe
+
+NOTA SOBRE SEGURIDAD (SMARTSCREEN)
+----------------------------------
+Si Windows muestra una pantalla azul indicando "Windows protegió su PC":
+1. Haga clic en "Más información".
+2. Haga clic en el botón "Ejecutar de todas formas".
+Esto sucede únicamente porque la aplicación es interna y no cuenta con una firma digital comercial. Es completamente segura.
+
+PASO 3
+------
+La aplicación se abrirá, inicie sesión con sus credenciales asignadas.
+
+---
+No requiere instalar Python ni utilizar consola de comandos.
+Si tiene problemas con WIN_FIDELIZACIONES.exe, puede ejecutar INICIAR_WIN.bat como alternativa.

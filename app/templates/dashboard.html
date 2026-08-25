@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Administrador - WIN</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'win-orange': '#FF6B00',
+                        'win-orange-dark': '#E65D00',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: #f8fafc;
+        }
+        .tab-active {
+            border-bottom: 2px solid #FF6B00;
+            color: #FF6B00;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body class="text-slate-800">
+
+    <nav class="bg-white shadow-sm border-b border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <h1 class="text-xl font-bold text-win-orange">Panel de Control</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <span class="text-sm font-medium text-slate-500">Hola, {{ user.nombre }} ({{ user.rol }})</span>
+                    <a href="{{ url_for('app_main') }}" class="text-sm text-win-orange hover:text-win-orange-dark font-medium">Volver a App</a>
+                    <a href="{{ url_for('logout') }}" class="text-sm text-slate-500 hover:text-slate-700">Cerrar Sesión</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+        
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="mb-4 p-4 rounded-xl {% if category == 'error' %}bg-red-100 text-red-700 border border-red-200{% else %}bg-green-100 text-green-700 border border-green-200{% endif %}">
+                {{ message }}
+              </div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+
+        <!-- KPI Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-100">
+                <p class="text-sm text-slate-500 font-medium">Asesores Activos (24h)</p>
+                <p class="text-2xl font-bold text-slate-800">{{ kpis.usuarios_activos }}</p>
+            </div>
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-100">
+                <p class="text-sm text-slate-500 font-medium">Consultas / Plantillas</p>
+                <p class="text-2xl font-bold text-win-orange">{{ kpis.consultas }} / {{ kpis.plantillas }}</p>
+            </div>
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-100">
+                <p class="text-sm text-slate-500 font-medium">Tickets / Derivaciones</p>
+                <p class="text-2xl font-bold text-green-600">{{ kpis.tickets }} / {{ kpis.derivaciones }}</p>
+            </div>
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-100">
+                <p class="text-sm text-slate-500 font-medium">Usuarios Registrados</p>
+                <p class="text-2xl font-bold text-blue-600">{{ kpis.total_usuarios }}</p>
+            </div>
+        </div>
+
+        <!-- TABS -->
+        <div class="border-b border-slate-200 mb-6">
+            <nav class="-mb-px flex space-x-8">
+                <button onclick="switchTab('audit')" id="tab-audit" class="tab-active whitespace-nowrap py-4 px-1 text-sm font-medium text-slate-500 hover:text-slate-700">
+                    📊 Historial de Auditoría
+                </button>
+                {% if user.rol in ['Administrador', 'Coordinador'] %}
+                <button onclick="switchTab('users')" id="tab-users" class="whitespace-nowrap py-4 px-1 text-sm font-medium text-slate-500 hover:text-slate-700">
+                    👥 Administración de Usuarios
+                </button>
+                {% endif %}
+            </nav>
+        </div>
+
+        <!-- TAB CONTENT: AUDITORIA -->
+        <div id="content-audit">
+            <div class="mb-4 flex items-center justify-between">
+                <h2 class="text-xl font-semibold text-slate-800">Registro de Actividades</h2>
+                <a href="{{ url_for('export_excel') }}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-green-600 hover:bg-green-700">
+                    Exportar Excel
+                </a>
+            </div>
+            <div class="bg-white shadow rounded-lg overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-slate-200">
+                        <thead class="bg-slate-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">Fecha / Hora</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">Usuario</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">Módulo</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">Acción</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">Detalles</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-slate-200">
+                            {% for log in logs %}
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-500">{{ log.fecha }} {{ log.hora }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-slate-900">{{ log.usuario_correo }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-500"><span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">{{ log.modulo }}</span></td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-900">{{ log.accion }}</td>
+                                <td class="px-6 py-4 text-sm text-slate-500 truncate max-w-xs" title="{{ log.detalles }}">{{ log.detalles }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        {% if user.rol in ['Administrador', 'Coordinador'] %}
+        <!-- TAB CONTENT: USUARIOS -->
+        <div id="content-users" class="hidden">
+            
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4 mb-6">
+                <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 text-center">
+                    <p class="text-xs text-slate-500">Admin.</p><p class="text-lg font-bold">{{ kpis.administradores }}</p>
+                </div>
+                <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 text-center">
+                    <p class="text-xs text-slate-500">Coord.</p><p class="text-lg font-bold">{{ kpis.coordinadores }}</p>
+                </div>
+                <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 text-center">
+                    <p class="text-xs text-slate-500">Supervisores</p><p class="text-lg font-bold">{{ kpis.supervisores }}</p>
+                </div>
+                <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 text-center">
+                    <p class="text-xs text-slate-500">Formadores</p><p class="text-lg font-bold">{{ kpis.formadores }}</p>
+                </div>
+                <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 text-center">
+                    <p class="text-xs text-slate-500">Calidad</p><p class="text-lg font-bold">{{ kpis.calidad }}</p>
+                </div>
+                <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 text-center">
+                    <p class="text-xs text-slate-500">Asesores</p><p class="text-lg font-bold">{{ kpis.asesores }}</p>
+                </div>
+                <div class="bg-red-50 p-3 rounded-xl border border-red-200 text-center">
+                    <p class="text-xs text-red-600">Pendientes</p><p class="text-lg font-bold text-red-700">{{ kpis.pendientes_cambio }}</p>
+                </div>
+            </div>
+
+            <div class="mb-4 flex items-center justify-between">
+                <h2 class="text-xl font-semibold text-slate-800">Directorio de Usuarios</h2>
+                <button onclick="openModal('modal-create')" class="inline-flex items-center px-4 py-2 bg-win-orange text-white text-sm font-medium rounded-lg shadow-sm hover:bg-win-orange-dark">
+                    + Crear Usuario
+                </button>
+            </div>
+            <div class="bg-white shadow rounded-lg overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-slate-200">
+                        <thead class="bg-slate-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">Nombre / Correo</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">Rol</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">Estado</th>
+                                <th class="px-6 py-3 text-right text-xs font-medium text-slate-500 uppercase">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-slate-200">
+                            {% for u in usuarios %}
+                            {% if u.estado != 'Eliminado' %}
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm font-medium text-slate-900">{{ u.nombre }}</div>
+                                    <div class="text-sm text-slate-500">{{ u.correo }}</div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-500">{{ u.rol }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    {% if u.estado == 'Activo' %}
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Activo</span>
+                                    {% else %}
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">Inactivo</span>
+                                    {% endif %}
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
+                                    {% if user.rol == 'Coordinador' and u.rol in ['Administrador', 'Coordinador'] %}
+                                        <span class="text-slate-400 text-xs italic">Solo lectura</span>
+                                    {% else %}
+                                        <button onclick="openEditModal({{ u.id }}, '{{ u.nombre }}', '{{ u.correo }}', '{{ u.rol }}', '{{ u.estado }}')" class="text-blue-600 hover:text-blue-900">Editar</button>
+                                        <button onclick="openResetModal({{ u.id }}, '{{ u.correo }}')" class="text-orange-600 hover:text-orange-900">Reset</button>
+                                        <form action="{{ url_for('cambiar_estado', id=u.id) }}" method="POST" class="inline" onsubmit="return confirm('¿Confirma eliminar este usuario de la plataforma?');">
+                                            <input type="hidden" name="estado" value="Eliminado">
+                                            <button type="submit" class="text-red-600 hover:text-red-900">Eliminar</button>
+                                        </form>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endif %}
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODAL CREAR USUARIO -->
+        <div id="modal-create" class="fixed inset-0 bg-slate-900 bg-opacity-50 hidden flex items-center justify-center z-50">
+            <div class="bg-white rounded-2xl p-6 w-full max-w-md">
+                <h3 class="text-lg font-bold mb-4">Crear Nuevo Usuario</h3>
+                <form action="{{ url_for('crear_usuario') }}" method="POST" class="space-y-4">
+                    <div><label class="block text-sm font-medium mb-1">Nombre Completo</label><input type="text" name="nombre" required class="w-full border rounded-lg p-2"></div>
+                    <div><label class="block text-sm font-medium mb-1">Correo Electrónico</label><input type="email" name="correo" required class="w-full border rounded-lg p-2"></div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Contraseña Temporal</label>
+                        <div class="flex space-x-2">
+                            <input type="text" name="password" id="create_password" required class="w-full border rounded-lg p-2">
+                            <button type="button" onclick="generatePassword('create_password')" class="px-3 py-2 bg-slate-200 rounded-lg text-sm hover:bg-slate-300">Generar</button>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium mb-1">Rol</label>
+                            <select name="rol" class="w-full border rounded-lg p-2">
+                                <option value="Administrador">Administrador</option>
+                                <option value="Coordinador">Coordinador</option>
+                                <option value="Supervisor">Supervisor</option>
+                                <option value="Formador">Formador</option>
+                                <option value="Calidad">Calidad</option>
+                                <option value="Asesor" selected>Asesor</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-1">Estado</label>
+                            <select name="estado" class="w-full border rounded-lg p-2">
+                                <option value="Activo">Activo</option>
+                                <option value="Inactivo">Inactivo</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="flex justify-end space-x-3 mt-6">
+                        <button type="button" onclick="closeModal('modal-create')" class="px-4 py-2 border rounded-lg text-slate-600">Cancelar</button>
+                        <button type="submit" class="px-4 py-2 bg-win-orange text-white rounded-lg">Crear Usuario</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- MODAL EDITAR USUARIO -->
+        <div id="modal-edit" class="fixed inset-0 bg-slate-900 bg-opacity-50 hidden flex items-center justify-center z-50">
+            <div class="bg-white rounded-2xl p-6 w-full max-w-md">
+                <h3 class="text-lg font-bold mb-4">Editar Usuario</h3>
+                <form id="form-edit" method="POST" class="space-y-4">
+                    <div><label class="block text-sm font-medium mb-1">Nombre Completo</label><input type="text" name="nombre" id="edit_nombre" required class="w-full border rounded-lg p-2"></div>
+                    <div><label class="block text-sm font-medium mb-1">Correo Electrónico</label><input type="email" name="correo" id="edit_correo" required class="w-full border rounded-lg p-2"></div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium mb-1">Rol</label>
+                            <select name="rol" id="edit_rol" class="w-full border rounded-lg p-2">
+                                <option value="Administrador">Administrador</option>
+                                <option value="Coordinador">Coordinador</option>
+                                <option value="Supervisor">Supervisor</option>
+                                <option value="Formador">Formador</option>
+                                <option value="Calidad">Calidad</option>
+                                <option value="Asesor">Asesor</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-1">Estado</label>
+                            <select name="estado" id="edit_estado" class="w-full border rounded-lg p-2">
+                                <option value="Activo">Activo</option>
+                                <option value="Inactivo">Inactivo</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="flex justify-end space-x-3 mt-6">
+                        <button type="button" onclick="closeModal('modal-edit')" class="px-4 py-2 border rounded-lg text-slate-600">Cancelar</button>
+                        <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg">Guardar Cambios</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- MODAL RESET CONTRASEÑA -->
+        <div id="modal-reset" class="fixed inset-0 bg-slate-900 bg-opacity-50 hidden flex items-center justify-center z-50">
+            <div class="bg-white rounded-2xl p-6 w-full max-w-md">
+                <h3 class="text-lg font-bold mb-4">Restablecer Contraseña</h3>
+                <p class="text-sm text-slate-500 mb-4">Se obligará a <span id="reset_correo_lbl" class="font-bold"></span> a cambiar esta clave en su próximo ingreso.</p>
+                <form id="form-reset" method="POST" class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Nueva Contraseña Temporal</label>
+                        <div class="flex space-x-2">
+                            <input type="text" name="nueva_clave" id="reset_password" required class="w-full border rounded-lg p-2">
+                            <button type="button" onclick="generatePassword('reset_password')" class="px-3 py-2 bg-slate-200 rounded-lg text-sm hover:bg-slate-300">Generar</button>
+                        </div>
+                    </div>
+                    <div class="flex justify-end space-x-3 mt-6">
+                        <button type="button" onclick="closeModal('modal-reset')" class="px-4 py-2 border rounded-lg text-slate-600">Cancelar</button>
+                        <button type="submit" class="px-4 py-2 bg-orange-600 text-white rounded-lg">Confirmar Reset</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        {% endif %}
+
+    </main>
+
+    <script>
+        function switchTab(tab) {
+            document.getElementById('tab-audit').classList.remove('tab-active', 'text-win-orange');
+            {% if user.rol in ['Administrador', 'Coordinador'] %}
+            document.getElementById('tab-users').classList.remove('tab-active', 'text-win-orange');
+            {% endif %}
+            
+            document.getElementById('tab-' + tab).classList.add('tab-active', 'text-win-orange');
+            
+            document.getElementById('content-audit').classList.add('hidden');
+            {% if user.rol in ['Administrador', 'Coordinador'] %}
+            document.getElementById('content-users').classList.add('hidden');
+            {% endif %}
+            
+            document.getElementById('content-' + tab).classList.remove('hidden');
+        }
+
+        function openModal(id) {
+            document.getElementById(id).classList.remove('hidden');
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).classList.add('hidden');
+        }
+
+        function generatePassword(inputId) {
+            const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%&";
+            let pwd = "Win@";
+            for(let i=0; i<6; i++) {
+                pwd += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            document.getElementById(inputId).value = pwd;
+        }
+
+        function openEditModal(id, nombre, correo, rol, estado) {
+            document.getElementById('form-edit').action = '/admin/usuarios/editar/' + id;
+            document.getElementById('edit_nombre').value = nombre;
+            document.getElementById('edit_correo').value = correo;
+            document.getElementById('edit_rol').value = rol;
+            document.getElementById('edit_estado').value = estado;
+            openModal('modal-edit');
+        }
+
+        function openResetModal(id, correo) {
+            document.getElementById('form-reset').action = '/admin/usuarios/reset/' + id;
+            document.getElementById('reset_correo_lbl').innerText = correo;
+            document.getElementById('reset_password').value = '';
+            openModal('modal-reset');
+        }
+    </script>
+</body>
+</html>

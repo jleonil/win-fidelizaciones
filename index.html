@@ -482,7 +482,12 @@
 
         // Generador de sonidos de alta precisión usando Web Audio API
         let audioCtx = null;
-        let alarmIntervalId = null;
+        let warningOscillator = null;
+        let warningGainNode = null;
+        let alarmOscillator = null;
+        let alarmGainNode = null;
+        let alarmLfo = null;
+        let alarmLfoGain = null;
         let alarmTimeoutId = null;
 
         function getAudioContext() {
@@ -494,67 +499,108 @@
             }
             return audioCtx;
         }
-        
-        function playTone(frequency, duration, type = 'sine', volume = 1.0) {
+
+        // Iniciar sonido continuo de advertencia (Segundo 45 a 59)
+        function startContinuousWarning() {
+            if (warningOscillator) return; // Ya está sonando de forma continua
             try {
                 const ctx = getAudioContext();
-                const oscillator = ctx.createOscillator();
-                const gainNode = ctx.createGain();
-                
-                oscillator.type = type;
-                oscillator.frequency.value = frequency;
-                
-                gainNode.gain.setValueAtTime(volume, ctx.currentTime);
-                
-                oscillator.connect(gainNode);
-                gainNode.connect(ctx.destination);
-                
-                oscillator.start();
-                gainNode.gain.exponentialRampToValueAtTime(0.00001, ctx.currentTime + duration);
-                
-                setTimeout(() => {
-                    try { oscillator.stop(); } catch(e){}
-                }, duration * 1000);
+                warningOscillator = ctx.createOscillator();
+                warningGainNode = ctx.createGain();
+
+                warningOscillator.type = 'sine';
+                warningOscillator.frequency.setValueAtTime(680, ctx.currentTime);
+
+                // Volumen de advertencia continuo
+                warningGainNode.gain.setValueAtTime(0.35, ctx.currentTime);
+
+                warningOscillator.connect(warningGainNode);
+                warningGainNode.connect(ctx.destination);
+
+                warningOscillator.start();
             } catch(e) {
-                console.warn("Audio Context Warning:", e);
+                console.warn("Audio Warning Error:", e);
             }
         }
 
-        function playWarningBeep() {
-            // 55 segundos: Pitido de advertencia único y claramente audible
-            playTone(880, 0.35, 'sine', 1.0);
-        }
-
-        function playUrgentBeep(sec) {
-            // 56 a 60 segundos: Pitidos repetitivos de advertencia incrementando urgencia
-            const freq = 920 + (sec - 55) * 110;
-            playTone(freq, 0.22, 'square', 1.2);
-        }
-
-        function stopAlarmSound() {
-            if (alarmIntervalId) {
-                clearInterval(alarmIntervalId);
-                alarmIntervalId = null;
+        // Detener sonido continuo de advertencia
+        function stopContinuousWarning() {
+            if (warningOscillator) {
+                try {
+                    warningOscillator.stop();
+                    warningOscillator.disconnect();
+                } catch(e) {}
+                warningOscillator = null;
+                warningGainNode = null;
             }
+        }
+
+        // Iniciar alarma crítica continua por 5 segundos (Al llegar a 60 segundos)
+        function startCriticalAlarm() {
+            stopCriticalAlarm();
+            stopContinuousWarning();
+            try {
+                const ctx = getAudioContext();
+                alarmOscillator = ctx.createOscillator();
+                alarmGainNode = ctx.createGain();
+
+                // Alarma continua urgente tipo sawtooth
+                alarmOscillator.type = 'sawtooth';
+                alarmOscillator.frequency.setValueAtTime(880, ctx.currentTime);
+
+                // Modulación de frecuencia (LFO) para efecto de alarma continuo
+                alarmLfo = ctx.createOscillator();
+                alarmLfoGain = ctx.createGain();
+                alarmLfo.frequency.setValueAtTime(4, ctx.currentTime);
+                alarmLfoGain.gain.setValueAtTime(200, ctx.currentTime);
+                alarmLfo.connect(alarmOscillator.frequency);
+                alarmLfo.start();
+
+                // Mayor volumen que la alerta de advertencia (0.65)
+                alarmGainNode.gain.setValueAtTime(0.65, ctx.currentTime);
+
+                alarmOscillator.connect(alarmGainNode);
+                alarmGainNode.connect(ctx.destination);
+
+                alarmOscillator.start();
+
+                // Duración de 5 segundos
+                alarmTimeoutId = setTimeout(() => {
+                    stopCriticalAlarm();
+                }, 5000);
+            } catch(e) {
+                console.warn("Audio Critical Alarm Error:", e);
+            }
+        }
+
+        // Detener alarma crítica
+        function stopCriticalAlarm() {
             if (alarmTimeoutId) {
                 clearTimeout(alarmTimeoutId);
                 alarmTimeoutId = null;
             }
+            if (alarmLfo) {
+                try {
+                    alarmLfo.stop();
+                    alarmLfo.disconnect();
+                } catch(e) {}
+                alarmLfo = null;
+                alarmLfoGain = null;
+            }
+            if (alarmOscillator) {
+                try {
+                    alarmOscillator.stop();
+                    alarmOscillator.disconnect();
+                } catch(e) {}
+                alarmOscillator = null;
+                alarmGainNode = null;
+            }
         }
 
-        function playAlarmSound() {
-            // Al alcanzar 60 segundos: Alarma continua durante 5 segundos completos con volumen superior
-            stopAlarmSound();
-            let step = 0;
-            alarmIntervalId = setInterval(() => {
-                const freq = (step % 2 === 0) ? 1250 : 850;
-                playTone(freq, 0.25, 'sawtooth', 1.5);
-                step++;
-            }, 280);
-
-            alarmTimeoutId = setTimeout(() => {
-                stopAlarmSound();
-            }, 5000);
+        // Detener todos los sonidos
+        function stopAllSounds() {
+            stopContinuousWarning();
+            stopCriticalAlarm();
         }
 
         function updateCronosUI() {
@@ -599,8 +645,8 @@
                 if (!isCronosPlaying) {
                     btnWaitPlayPause.className = 'bg-emerald-600 hover:bg-emerald-700 text-white px-3 md:px-4 py-2 rounded-lg font-bold transition-all flex items-center justify-center gap-1.5 shadow-sm active:scale-95 text-xs md:text-sm';
                 }
-            } else if (cronosSeconds <= 45) {
-                // ÁMBAR (36 - 45s) - Alerta preventiva
+            } else if (cronosSeconds <= 44) {
+                // ÁMBAR (36 - 44s) - Alerta preventiva
                 cronosWidget.classList.add('border-amber-500', 'cronos-pulse-amber');
                 cronosLedPing.classList.add('bg-amber-400');
                 cronosLedDot.classList.add('bg-amber-500');
@@ -618,7 +664,7 @@
                     btnWaitPlayPause.className = 'bg-amber-600 hover:bg-amber-700 text-white px-3 md:px-4 py-2 rounded-lg font-bold transition-all flex items-center justify-center gap-1.5 shadow-sm active:scale-95 text-xs md:text-sm';
                 }
             } else if (cronosSeconds <= 54) {
-                // ROJO (46 - 54s) - Alerta crítica / Acción Inmediata
+                // ROJO (45 - 54s) - Alerta crítica / Acción Inmediata
                 cronosWidget.classList.add('border-red-500', 'cronos-pulse-red');
                 cronosLedPing.classList.add('bg-red-400');
                 cronosLedDot.classList.add('bg-red-500');
@@ -677,7 +723,7 @@
             if (isCronosPlaying) {
                 // Pausar
                 clearInterval(cronosInterval);
-                stopAlarmSound();
+                stopAllSounds();
                 isCronosPlaying = false;
                 iconWaitPlayPause.className = 'fa-solid fa-play';
                 textWaitPlayPause.textContent = 'Reanudar';
@@ -691,16 +737,19 @@
                 textWaitPlayPause.textContent = 'Pausar';
                 btnWaitPlayPause.className = 'bg-slate-800 hover:bg-slate-900 text-white px-3 md:px-4 py-2 rounded-lg font-bold transition-all flex items-center justify-center gap-1.5 shadow-sm active:scale-95 text-xs md:text-sm';
                 
+                // Si se reanuda entre los segundos 45 y 59, reactivar el sonido continuo de advertencia
+                if (cronosSeconds >= 45 && cronosSeconds < 60) {
+                    startContinuousWarning();
+                }
+
                 cronosInterval = setInterval(() => {
                     cronosSeconds++;
                     
                     // Alertas sonoras
-                    if (cronosSeconds === 55) {
-                        playWarningBeep();
-                    } else if (cronosSeconds >= 56 && cronosSeconds <= 59) {
-                        playUrgentBeep(cronosSeconds);
+                    if (cronosSeconds === 45) {
+                        startContinuousWarning();
                     } else if (cronosSeconds === 60) {
-                        playAlarmSound();
+                        startCriticalAlarm();
                     }
                     
                     updateCronosUI();
@@ -710,7 +759,7 @@
 
         function resetCronosTimer() {
             clearInterval(cronosInterval);
-            stopAlarmSound();
+            stopAllSounds();
             isCronosPlaying = false;
             cronosSeconds = 0;
             

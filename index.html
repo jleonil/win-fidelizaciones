@@ -181,24 +181,24 @@
 
     <!-- Barra de Navegación Superior -->
     <nav class="bg-white shadow-sm border-b border-slate-200 z-40 relative">
-        <div class="max-w-7xl mx-auto px-4 flex items-center gap-2 overflow-x-auto py-3 scrollbar-hide">
+        <div class="max-w-7xl mx-auto px-4 flex items-center justify-center gap-3 md:gap-8 overflow-x-auto py-3 scrollbar-hide">
             
             <!-- Opción: Clave Secreta (Activa) -->
             <button id="tab-generator" class="flex items-center gap-2 bg-win-orange text-white px-4 py-2 rounded-xl text-sm font-bold shadow-sm shrink-0 transition-all cursor-pointer">
                 <i class="fa-solid fa-key"></i>
-                Generador de Claves
+                Clave Secreta
             </button>
             
             <!-- Opción: Tipificaciones -->
             <button id="tab-tipificaciones" class="flex items-center gap-2 bg-transparent hover:bg-slate-100 text-slate-600 px-4 py-2 rounded-xl text-sm font-bold shrink-0 transition-all cursor-pointer">
                 <i class="fa-solid fa-list-ul"></i>
-                Tipificaciones & Retención
+                Tipificaciones
             </button>
             
             <!-- Opción: Tickets -->
             <button id="tab-tickets" class="flex items-center gap-2 bg-transparent hover:bg-slate-100 text-slate-600 px-4 py-2 rounded-xl text-sm font-bold shrink-0 transition-all">
                 <i class="fa-solid fa-ticket"></i>
-                Tickets (Soporte)
+                Tickets
                 <span class="bg-[#2B78C5] text-white text-[10px] px-2 py-0.5 rounded-full ml-1 uppercase tracking-wider font-extrabold">Tecnológico</span>
             </button>
             
@@ -207,12 +207,6 @@
                 <i class="fa-solid fa-share"></i>
                 Derivaciones
                 <span class="bg-emerald-600 text-white text-[10px] px-2 py-0.5 rounded-full ml-1 uppercase tracking-wider font-extrabold">Discord</span>
-            </button>
-
-            <!-- Opción: Directorio de Escalamiento -->
-            <button id="tab-directorio" class="flex items-center gap-2 bg-transparent hover:bg-slate-100 text-slate-600 px-4 py-2 rounded-xl text-sm font-bold shrink-0 transition-all cursor-pointer">
-                <i class="fa-solid fa-address-book"></i>
-                Directorio Escalamiento
             </button>
             
         </div>
@@ -224,6 +218,120 @@
         <!-- PESTAÑA: DIRECTORIO ESCALAMIENTO -->
         <div id="content-directorio" class="tab-content hidden w-full h-[800px] border border-slate-200 rounded-2xl overflow-hidden bg-[#1e1e1e]">
             <div id="react-directorio-root" class="w-full h-full flex text-sm"></div>
+        </div>
+
+        <!-- ================= PESTAÑA: ACUERDOS DE VOZ (GRABACIONES Y CONTRATOS) ================= -->
+        <div id="content-acuerdos-voz" class="tab-content hidden animate-pop space-y-6">
+            
+            <!-- Banner de Cabecera Oficial -->
+            <div class="bg-gradient-to-r from-purple-900 via-purple-800 to-indigo-900 text-white p-6 rounded-2xl shadow-lg border border-purple-700/50 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                <div class="flex items-center gap-4">
+                    <div class="bg-white/10 p-3.5 rounded-2xl text-purple-200 backdrop-blur-md border border-white/10 shrink-0">
+                        <i class="fa-solid fa-microphone-lines text-3xl"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2 flex-wrap">
+                            <h2 class="text-xl md:text-2xl font-black tracking-wide">Módulo de Acuerdos de Voz</h2>
+                            <span class="bg-purple-500/30 text-purple-200 border border-purple-400/30 text-[10px] font-extrabold px-2.5 py-0.5 rounded-full uppercase tracking-wider">Oficial WIN</span>
+                        </div>
+                        <p class="text-xs md:text-sm text-purple-200 mt-1 max-w-2xl">
+                            Guiones oficiales de lectura obligatoria para llamadas de retención y fidelización: migraciones, suspensiones temporales, servicios solicitados, SVAs y bajas.
+                        </p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2 self-end md:self-auto shrink-0">
+                    <span class="text-xs bg-white/10 border border-white/20 text-purple-100 px-3 py-1.5 rounded-xl font-bold flex items-center gap-1.5 shadow-sm">
+                        <i class="fa-solid fa-shield-halved text-emerald-400"></i> 5 Acuerdos Disponibles
+                    </span>
+                </div>
+            </div>
+
+            <!-- Barra de Búsqueda y Filtros Rápidos -->
+            <div class="bg-white p-4 rounded-2xl shadow-md border border-slate-200 flex flex-col md:flex-row gap-3 items-center justify-between">
+                <div class="relative w-full md:w-96">
+                    <i class="fa-solid fa-search absolute left-3.5 top-3 text-slate-400 text-sm"></i>
+                    <input type="text" id="acuerdos-search-input" placeholder="Buscar por palabra clave (ej. Migración, ONT, DGO, Mesh, S/1, Baja)..." class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-9 py-2 text-sm text-slate-700 focus:outline-none focus:border-purple-600 focus:bg-white transition-all shadow-inner">
+                    <button id="acuerdos-search-clear" onclick="clearAcuerdosSearch()" class="hidden absolute right-3 top-2.5 text-slate-400 hover:text-slate-600 transition" title="Limpiar búsqueda">
+                        <i class="fa-solid fa-circle-xmark"></i>
+                    </button>
+                </div>
+
+                <!-- Chips de filtro de categoría -->
+                <div class="flex items-center gap-1.5 overflow-x-auto w-full md:w-auto pb-1 md:pb-0 scrollbar-hide text-xs">
+                    <button onclick="filterAcuerdosCategory('all')" id="filter-chip-all" class="acuerdos-filter-btn active bg-purple-700 text-white font-bold px-3 py-1.5 rounded-xl transition shrink-0 shadow-sm" data-category="all">Todos (5)</button>
+                    <button onclick="filterAcuerdosCategory('migracion')" id="filter-chip-migracion" class="acuerdos-filter-btn bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold px-3 py-1.5 rounded-xl transition shrink-0" data-category="migracion">Migración</button>
+                    <button onclick="filterAcuerdosCategory('suspension')" id="filter-chip-suspension" class="acuerdos-filter-btn bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold px-3 py-1.5 rounded-xl transition shrink-0" data-category="suspension">Suspensión</button>
+                    <button onclick="filterAcuerdosCategory('servicios')" id="filter-chip-servicios" class="acuerdos-filter-btn bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold px-3 py-1.5 rounded-xl transition shrink-0" data-category="servicios">Servicios Solicitados</button>
+                    <button onclick="filterAcuerdosCategory('sva')" id="filter-chip-sva" class="acuerdos-filter-btn bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold px-3 py-1.5 rounded-xl transition shrink-0" data-category="sva">SVAs</button>
+                    <button onclick="filterAcuerdosCategory('baja')" id="filter-chip-baja" class="acuerdos-filter-btn bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold px-3 py-1.5 rounded-xl transition shrink-0" data-category="baja">Bajas</button>
+                </div>
+            </div>
+
+            <!-- Grid de Tarjetas de Acuerdos -->
+            <div id="acuerdos-cards-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                <!-- Se inyectan dinámicamente mediante JS -->
+            </div>
+
+            <!-- Estado Vacío -->
+            <div id="acuerdos-empty-state" class="hidden bg-white p-12 rounded-2xl border border-slate-200 shadow-sm text-center">
+                <i class="fa-solid fa-filter-circle-xmark text-4xl text-slate-300 mb-3"></i>
+                <h3 class="text-base font-bold text-slate-700">No se encontraron acuerdos coincidentes</h3>
+                <p class="text-xs text-slate-500 mt-1">Intenta con otro término de búsqueda como "Migración", "Suspensión", "ONT", "Mesh", "WIN TV", "Baja", etc.</p>
+                <button onclick="clearAcuerdosSearch()" class="mt-4 inline-flex items-center gap-1.5 bg-purple-100 hover:bg-purple-200 text-purple-800 font-bold text-xs px-3.5 py-2 rounded-xl transition">
+                    <i class="fa-solid fa-rotate-left"></i> Restablecer Filtros
+                </button>
+            </div>
+        </div>
+
+        <!-- ================= POPUP MODAL PARA ACUERDOS DE VOZ ================= -->
+        <div id="modal-acuerdo" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-5 bg-slate-950/70 backdrop-blur-sm transition-all duration-300">
+            <div id="modal-acuerdo-card" class="bg-white w-full max-w-4xl max-h-[92vh] rounded-2xl shadow-2xl border border-slate-200 flex flex-col overflow-hidden animate-pop">
+                
+                <!-- Modal Header -->
+                <div class="bg-slate-900 text-white p-4 md:p-5 flex items-center justify-between gap-3 border-b border-slate-800 shrink-0">
+                    <div class="flex items-center gap-3 min-w-0">
+                        <div id="modal-acuerdo-icon-container" class="w-10 h-10 rounded-xl bg-purple-600 text-white flex items-center justify-center font-bold text-lg shadow-inner shrink-0">
+                            <i id="modal-acuerdo-icon" class="fa-solid fa-microphone-lines"></i>
+                        </div>
+                        <div class="min-w-0">
+                            <span id="modal-acuerdo-badge" class="text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full bg-purple-500/30 text-purple-300 border border-purple-400/30">Acuerdo</span>
+                            <h3 id="modal-acuerdo-title" class="text-sm md:text-base font-extrabold text-white truncate mt-0.5 leading-tight">Título del Acuerdo</h3>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center gap-2 shrink-0">
+                        <button id="btn-modal-copy-header" onclick="copyCurrentModalAcuerdo()" class="bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold px-3.5 py-2 rounded-xl transition flex items-center gap-1.5 shadow-sm active:scale-95">
+                            <i class="fa-regular fa-copy"></i>
+                            <span class="hidden sm:inline">Copiar Guion</span>
+                        </button>
+                        <button onclick="closeAcuerdoModal()" class="text-slate-400 hover:text-white hover:bg-slate-800 w-9 h-9 rounded-xl flex items-center justify-center transition" title="Cerrar modal (Esc)">
+                            <i class="fa-solid fa-xmark text-lg"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Modal Body con Scroll Independiente -->
+                <div id="modal-acuerdo-body" class="p-5 md:p-6 overflow-y-auto space-y-6 flex-grow bg-slate-50 text-slate-800 text-sm leading-relaxed">
+                    <!-- Contenido renderizado -->
+                </div>
+
+                <!-- Modal Footer -->
+                <div class="bg-white p-3.5 md:p-4 border-t border-slate-200 flex flex-wrap items-center justify-between gap-3 shrink-0">
+                    <div class="text-[11px] text-slate-500 flex items-center gap-2">
+                        <i class="fa-solid fa-circle-check text-emerald-600"></i>
+                        <span>Guion oficial para grabación obligatoria de voz.</span>
+                    </div>
+                    <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
+                        <button onclick="closeAcuerdoModal()" class="px-4 py-2 text-xs font-bold text-slate-600 hover:text-slate-800 bg-slate-100 hover:bg-slate-200 rounded-xl transition">
+                            Cerrar
+                        </button>
+                        <button id="btn-modal-copy-footer" onclick="copyCurrentModalAcuerdo()" class="bg-purple-700 hover:bg-purple-800 text-white text-xs font-bold px-4 py-2 rounded-xl transition flex items-center gap-1.5 shadow-md active:scale-95">
+                            <i class="fa-solid fa-copy"></i>
+                            <span>Copiar Guion Completo</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div id="content-generator" class="tab-content block">
@@ -482,13 +590,11 @@
 
         // Generador de sonidos de alta precisión usando Web Audio API
         let audioCtx = null;
-        let warningOscillator = null;
-        let warningGainNode = null;
-        let alarmOscillator = null;
-        let alarmGainNode = null;
-        let alarmLfo = null;
-        let alarmLfoGain = null;
-        let alarmTimeoutId = null;
+        let preventiveInterval = null;
+        let criticalOscillator = null;
+        let criticalGainNode = null;
+        let criticalLfo = null;
+        let criticalLfoGain = null;
 
         function getAudioContext() {
             if (!audioCtx) {
@@ -500,106 +606,129 @@
             return audioCtx;
         }
 
-        // Iniciar sonido continuo de advertencia (Segundo 45 a 59)
-        function startContinuousWarning() {
-            if (warningOscillator) return; // Ya está sonando de forma continua
+        /* =========================================================================
+           FASE 1: ALERTA PREVENTIVA (45 a 60 segundos)
+           - Inicia exactamente a los 45s y se mantiene hasta los 60s
+           - Emite DOS PITIDOS POR SEGUNDO de frecuencia constante (750 Hz)
+           - Sonido uniforme, sin pausas largas, claramente audible
+           - Volumen máximo permitido: 70 dB (gain calibrado a 0.25)
+           ========================================================================= */
+        function playPreventiveBeep() {
             try {
                 const ctx = getAudioContext();
-                warningOscillator = ctx.createOscillator();
-                warningGainNode = ctx.createGain();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
 
-                warningOscillator.type = 'sine';
-                warningOscillator.frequency.setValueAtTime(680, ctx.currentTime);
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(750, ctx.currentTime);
 
-                // Volumen de advertencia continuo
-                warningGainNode.gain.setValueAtTime(0.35, ctx.currentTime);
+                const volume = 0.25; // Nivel preventivo (<= 70 dB)
+                const duration = 0.15; // 150ms pitido + 350ms pausa = 500ms por ciclo (2 pitidos/seg)
 
-                warningOscillator.connect(warningGainNode);
-                warningGainNode.connect(ctx.destination);
+                gain.gain.setValueAtTime(0.0001, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(volume, ctx.currentTime + 0.02);
+                gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + duration);
 
-                warningOscillator.start();
-            } catch(e) {
-                console.warn("Audio Warning Error:", e);
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+
+                osc.start(ctx.currentTime);
+                osc.stop(ctx.currentTime + duration + 0.02);
+            } catch (e) {
+                console.warn("Error en pitido preventivo:", e);
             }
         }
 
-        // Detener sonido continuo de advertencia
-        function stopContinuousWarning() {
-            if (warningOscillator) {
-                try {
-                    warningOscillator.stop();
-                    warningOscillator.disconnect();
-                } catch(e) {}
-                warningOscillator = null;
-                warningGainNode = null;
-            }
-        }
-
-        // Iniciar alarma crítica continua por 5 segundos (Al llegar a 60 segundos)
-        function startCriticalAlarm() {
+        function startPreventiveWarning() {
+            if (preventiveInterval) return; // Ya está activo
             stopCriticalAlarm();
-            stopContinuousWarning();
+            playPreventiveBeep(); // Primer pitido inmediato
+            // 2 pitidos por segundo = intervalo de 500 ms
+            preventiveInterval = setInterval(() => {
+                playPreventiveBeep();
+            }, 500);
+        }
+
+        function stopPreventiveWarning() {
+            if (preventiveInterval) {
+                clearInterval(preventiveInterval);
+                preventiveInterval = null;
+            }
+        }
+
+        /* =========================================================================
+           FASE 2: ALERTA CRÍTICA (61 a 70 segundos)
+           - Se activa automáticamente al superar el segundo 60 (segundo 61 a 70)
+           - Sonido continuo de emergencia de mayor intensidad
+           - Sin interrupciones
+           - Volumen máximo permitido: 85 dB (gain calibrado a 0.60)
+           ========================================================================= */
+        function startCriticalAlarm() {
+            if (criticalOscillator) return; // Ya está activo continuamente
+            stopPreventiveWarning();
             try {
                 const ctx = getAudioContext();
-                alarmOscillator = ctx.createOscillator();
-                alarmGainNode = ctx.createGain();
+                criticalOscillator = ctx.createOscillator();
+                criticalGainNode = ctx.createGain();
 
-                // Alarma continua urgente tipo sawtooth
-                alarmOscillator.type = 'sawtooth';
-                alarmOscillator.frequency.setValueAtTime(880, ctx.currentTime);
+                // Tono continuo de emergencia
+                criticalOscillator.type = 'sawtooth';
+                criticalOscillator.frequency.setValueAtTime(880, ctx.currentTime);
 
-                // Modulación de frecuencia (LFO) para efecto de alarma continuo
-                alarmLfo = ctx.createOscillator();
-                alarmLfoGain = ctx.createGain();
-                alarmLfo.frequency.setValueAtTime(4, ctx.currentTime);
-                alarmLfoGain.gain.setValueAtTime(200, ctx.currentTime);
-                alarmLfo.connect(alarmOscillator.frequency);
-                alarmLfo.start();
+                // Modulación LFO para efecto sonoro de emergencia continua
+                criticalLfo = ctx.createOscillator();
+                criticalLfoGain = ctx.createGain();
+                criticalLfo.frequency.setValueAtTime(4, ctx.currentTime);
+                criticalLfoGain.gain.setValueAtTime(180, ctx.currentTime);
+                criticalLfo.connect(criticalOscillator.frequency);
+                criticalLfo.start();
 
-                // Mayor volumen que la alerta de advertencia (0.65)
-                alarmGainNode.gain.setValueAtTime(0.65, ctx.currentTime);
+                // Mayor intensidad (<= 85 dB -> gain 0.60)
+                criticalGainNode.gain.setValueAtTime(0.0001, ctx.currentTime);
+                criticalGainNode.gain.exponentialRampToValueAtTime(0.60, ctx.currentTime + 0.05);
 
-                alarmOscillator.connect(alarmGainNode);
-                alarmGainNode.connect(ctx.destination);
+                criticalOscillator.connect(criticalGainNode);
+                criticalGainNode.connect(ctx.destination);
 
-                alarmOscillator.start();
-
-                // Duración de 5 segundos
-                alarmTimeoutId = setTimeout(() => {
-                    stopCriticalAlarm();
-                }, 5000);
-            } catch(e) {
-                console.warn("Audio Critical Alarm Error:", e);
+                criticalOscillator.start();
+            } catch (e) {
+                console.warn("Error en alarma crítica:", e);
             }
         }
 
-        // Detener alarma crítica
         function stopCriticalAlarm() {
-            if (alarmTimeoutId) {
-                clearTimeout(alarmTimeoutId);
-                alarmTimeoutId = null;
-            }
-            if (alarmLfo) {
+            if (criticalLfo) {
                 try {
-                    alarmLfo.stop();
-                    alarmLfo.disconnect();
-                } catch(e) {}
-                alarmLfo = null;
-                alarmLfoGain = null;
+                    criticalLfo.stop();
+                    criticalLfo.disconnect();
+                } catch (e) {}
+                criticalLfo = null;
+                criticalLfoGain = null;
             }
-            if (alarmOscillator) {
+            if (criticalOscillator) {
                 try {
-                    alarmOscillator.stop();
-                    alarmOscillator.disconnect();
-                } catch(e) {}
-                alarmOscillator = null;
-                alarmGainNode = null;
+                    if (criticalGainNode && audioCtx) {
+                        criticalGainNode.gain.setValueAtTime(criticalGainNode.gain.value, audioCtx.currentTime);
+                        criticalGainNode.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.03);
+                    }
+                    setTimeout(() => {
+                        try {
+                            if (criticalOscillator) {
+                                criticalOscillator.stop();
+                                criticalOscillator.disconnect();
+                                criticalOscillator = null;
+                            }
+                        } catch (e) {}
+                    }, 40);
+                } catch (e) {
+                    criticalOscillator = null;
+                }
+                criticalGainNode = null;
             }
         }
 
-        // Detener todos los sonidos
         function stopAllSounds() {
-            stopContinuousWarning();
+            stopPreventiveWarning();
             stopCriticalAlarm();
         }
 
@@ -629,7 +758,13 @@
             );
             cronosSpeechContainer.className = 'hidden text-xs rounded-lg px-2.5 py-1.5 border items-center justify-between gap-2 transition-all';
 
-            // Semáforo SLA y estados
+            // Semáforo SLA y estados:
+            // VERDE: 0 a 35 segundos
+            // ÁMBAR: 36 a 44 segundos
+            // ROJO: 45 a 60 segundos
+            // CRÍTICO: 61 a 70 segundos
+            // EXCEDIDO: Más de 70 segundos
+
             if (cronosSeconds <= 35) {
                 // VERDE (0 - 35s) - Dentro del SLA
                 cronosWidget.classList.add('border-emerald-500');
@@ -646,7 +781,7 @@
                     btnWaitPlayPause.className = 'bg-emerald-600 hover:bg-emerald-700 text-white px-3 md:px-4 py-2 rounded-lg font-bold transition-all flex items-center justify-center gap-1.5 shadow-sm active:scale-95 text-xs md:text-sm';
                 }
             } else if (cronosSeconds <= 44) {
-                // ÁMBAR (36 - 44s) - Alerta preventiva
+                // ÁMBAR (36 - 44s) - Alerta preventiva visual
                 cronosWidget.classList.add('border-amber-500', 'cronos-pulse-amber');
                 cronosLedPing.classList.add('bg-amber-400');
                 cronosLedDot.classList.add('bg-amber-500');
@@ -663,15 +798,15 @@
                 if (!isCronosPlaying) {
                     btnWaitPlayPause.className = 'bg-amber-600 hover:bg-amber-700 text-white px-3 md:px-4 py-2 rounded-lg font-bold transition-all flex items-center justify-center gap-1.5 shadow-sm active:scale-95 text-xs md:text-sm';
                 }
-            } else if (cronosSeconds <= 54) {
-                // ROJO (45 - 54s) - Alerta crítica / Acción Inmediata
+            } else if (cronosSeconds <= 60) {
+                // ROJO (45 - 60s) - Alerta Preventiva Sonora (2 pitidos/s)
                 cronosWidget.classList.add('border-red-500', 'cronos-pulse-red');
                 cronosLedPing.classList.add('bg-red-400');
                 cronosLedDot.classList.add('bg-red-500');
                 waitTimerCircle.classList.add('text-red-500');
                 waitTimerText.classList.add('text-red-600');
                 cronosStatusText.classList.add('text-red-600');
-                cronosStatusText.textContent = "⛔ Acción Inmediata";
+                cronosStatusText.textContent = cronosSeconds <= 54 ? "⛔ Acción Inmediata" : "🔴 Tiempo Crítico";
 
                 // Speech Crítico
                 cronosSpeechContainer.className = 'flex bg-red-50 border-red-300 text-red-950 text-xs rounded-lg px-2.5 py-1.5 border items-center justify-between gap-2 transition-all font-semibold';
@@ -681,26 +816,26 @@
                 if (!isCronosPlaying) {
                     btnWaitPlayPause.className = 'bg-red-600 hover:bg-red-700 text-white px-3 md:px-4 py-2 rounded-lg font-bold transition-all flex items-center justify-center gap-1.5 shadow-sm active:scale-95 text-xs md:text-sm';
                 }
-            } else if (cronosSeconds <= 60) {
-                // 55 - 60s: Tiempo Crítico
-                cronosWidget.classList.add('border-red-600', 'cronos-pulse-red');
+            } else if (cronosSeconds <= 70) {
+                // CRÍTICO (61 - 70s) - Alerta Crítica Sonora Continua (<= 85 dB)
+                cronosWidget.classList.add('border-red-600', 'cronos-flash-critical');
                 cronosLedPing.classList.add('bg-red-500');
                 cronosLedDot.classList.add('bg-red-600');
                 waitTimerCircle.classList.add('text-red-600');
                 waitTimerText.classList.add('text-red-600', 'animate-pulse');
                 cronosStatusText.classList.add('text-red-700', 'animate-pulse');
-                cronosStatusText.textContent = "🔴 Tiempo Crítico";
+                cronosStatusText.textContent = "⚡ SLA CRÍTICO";
 
                 // Speech Urgente
                 cronosSpeechContainer.className = 'flex bg-red-100 border-red-400 text-red-950 text-xs rounded-lg px-2.5 py-1.5 border items-center justify-between gap-2 transition-all font-bold animate-pulse';
                 cronosSpeechIcon.className = 'fa-solid fa-bullhorn text-red-700 shrink-0';
-                cronosSpeechText.textContent = "Reingresar inmediatamente con el cliente.";
+                cronosSpeechText.textContent = "¡Tiempo Crítico! Retomar llamada de inmediato.";
 
                 if (!isCronosPlaying) {
                     btnWaitPlayPause.className = 'bg-red-700 hover:bg-red-800 text-white px-3 md:px-4 py-2 rounded-lg font-bold transition-all flex items-center justify-center gap-1.5 shadow-sm active:scale-95 text-xs md:text-sm';
                 }
             } else {
-                // 60+ s: SLA EXCEDIDO
+                // EXCEDIDO (Más de 70s) - SLA EXCEDIDO
                 cronosWidget.classList.add('border-red-700', 'cronos-flash-critical');
                 cronosLedPing.classList.add('bg-red-600');
                 cronosLedDot.classList.add('bg-red-700');
@@ -737,19 +872,23 @@
                 textWaitPlayPause.textContent = 'Pausar';
                 btnWaitPlayPause.className = 'bg-slate-800 hover:bg-slate-900 text-white px-3 md:px-4 py-2 rounded-lg font-bold transition-all flex items-center justify-center gap-1.5 shadow-sm active:scale-95 text-xs md:text-sm';
                 
-                // Si se reanuda entre los segundos 45 y 59, reactivar el sonido continuo de advertencia
-                if (cronosSeconds >= 45 && cronosSeconds < 60) {
-                    startContinuousWarning();
+                // Si se reanuda dentro del rango preventivo (45-60s) o crítico (61-70s)
+                if (cronosSeconds >= 45 && cronosSeconds <= 60) {
+                    startPreventiveWarning();
+                } else if (cronosSeconds >= 61 && cronosSeconds <= 70) {
+                    startCriticalAlarm();
                 }
 
                 cronosInterval = setInterval(() => {
                     cronosSeconds++;
                     
-                    // Alertas sonoras
-                    if (cronosSeconds === 45) {
-                        startContinuousWarning();
-                    } else if (cronosSeconds === 60) {
+                    // Alertas sonoras automáticas por rango
+                    if (cronosSeconds >= 45 && cronosSeconds <= 60) {
+                        startPreventiveWarning();
+                    } else if (cronosSeconds >= 61 && cronosSeconds <= 70) {
                         startCriticalAlarm();
+                    } else {
+                        stopAllSounds();
                     }
                     
                     updateCronosUI();
@@ -1787,6 +1926,23 @@
         const elContentDerivaciones = document.getElementById('content-derivaciones');
         const elTabDirectorio = document.getElementById('tab-directorio');
         const elContentDirectorio = document.getElementById('content-directorio');
+        const elTabAcuerdosVoz = document.getElementById('tab-acuerdos-voz');
+        const elContentAcuerdosVoz = document.getElementById('content-acuerdos-voz');
+
+        // Elementos del DOM - Acuerdos de Voz
+        const elAcuerdosSearchInput = document.getElementById('acuerdos-search-input');
+        const elAcuerdosSearchClear = document.getElementById('acuerdos-search-clear');
+        const elAcuerdosCardsGrid = document.getElementById('acuerdos-cards-grid');
+        const elAcuerdosEmptyState = document.getElementById('acuerdos-empty-state');
+        const elModalAcuerdo = document.getElementById('modal-acuerdo');
+        const elModalAcuerdoCard = document.getElementById('modal-acuerdo-card');
+        const elModalAcuerdoBadge = document.getElementById('modal-acuerdo-badge');
+        const elModalAcuerdoTitle = document.getElementById('modal-acuerdo-title');
+        const elModalAcuerdoIcon = document.getElementById('modal-acuerdo-icon');
+        const elModalAcuerdoIconContainer = document.getElementById('modal-acuerdo-icon-container');
+        const elModalAcuerdoBody = document.getElementById('modal-acuerdo-body');
+        let currentModalAcuerdoKey = null;
+        let currentAcuerdoCategory = 'all';
 
         // Elementos del DOM - Generador
         const elSecretKey = document.getElementById('secret-key');
@@ -1862,6 +2018,7 @@
             if (elTabTickets) elTabTickets.className = "flex items-center gap-2 bg-transparent hover:bg-slate-100 text-slate-600 px-4 py-2 rounded-xl text-sm font-bold shrink-0 transition-all cursor-pointer";
             if (elTabDerivaciones) elTabDerivaciones.className = "flex items-center gap-2 bg-transparent hover:bg-slate-100 text-slate-600 px-4 py-2 rounded-xl text-sm font-bold shrink-0 transition-all cursor-pointer";
             if (elTabDirectorio) elTabDirectorio.className = "flex items-center gap-2 bg-transparent hover:bg-slate-100 text-slate-600 px-4 py-2 rounded-xl text-sm font-bold shrink-0 transition-all cursor-pointer";
+            if (elTabAcuerdosVoz) elTabAcuerdosVoz.className = "flex items-center gap-2 bg-transparent hover:bg-slate-100 text-slate-600 px-4 py-2 rounded-xl text-sm font-bold shrink-0 transition-all cursor-pointer";
             
             // Hide all content
             elContentGenerator.classList.add('hidden');
@@ -1879,6 +2036,10 @@
             if (elContentDirectorio) {
                 elContentDirectorio.classList.add('hidden');
                 elContentDirectorio.classList.remove('block');
+            }
+            if (elContentAcuerdosVoz) {
+                elContentAcuerdosVoz.classList.add('hidden');
+                elContentAcuerdosVoz.classList.remove('block');
             }
 
             if (target === 'generator') {
@@ -1961,6 +2122,24 @@
                 headerSubtitle.textContent = "Simulador de correos y plantillas";
                 headerSubtitle.className = "text-xs text-slate-300 mt-1 font-medium transition-all duration-300";
                 headerBadge.classList.add('hidden');
+            } else if (target === 'acuerdos-voz') {
+                if (elTabAcuerdosVoz) {
+                    elTabAcuerdosVoz.className = "flex items-center gap-2 bg-purple-700 text-white px-4 py-2 rounded-xl text-sm font-bold shadow-sm shrink-0 transition-all cursor-pointer";
+                }
+                if (elContentAcuerdosVoz) {
+                    elContentAcuerdosVoz.classList.remove('hidden');
+                    elContentAcuerdosVoz.classList.add('block');
+                }
+                
+                header.className = "bg-purple-800 text-white shadow-md border-b-4 border-purple-950 transition-all duration-300";
+                headerIconContainer.className = "bg-white p-2 rounded-xl text-purple-800 flex items-center justify-center shadow-inner transition-colors duration-300";
+                headerIcon.className = "fa-solid fa-microphone-lines text-2xl";
+                headerTitle.textContent = "ACUERDOS DE VOZ Y CONTRATOS";
+                headerSubtitle.textContent = "Guiones oficiales de grabación, migración, suspensión, SVAs y bajas";
+                headerSubtitle.className = "text-xs text-purple-200 mt-1 font-medium transition-all duration-300";
+                headerBadge.classList.add('hidden');
+
+                renderAcuerdosCards();
             }
         }
 
@@ -1969,6 +2148,7 @@
         if (elTabTickets) elTabTickets.addEventListener('click', () => switchTab('tickets'));
         if (elTabDerivaciones) elTabDerivaciones.addEventListener('click', () => switchTab('derivaciones'));
         if (elTabDirectorio) elTabDirectorio.addEventListener('click', () => switchTab('directorio'));
+        if (elTabAcuerdosVoz) elTabAcuerdosVoz.addEventListener('click', () => switchTab('acuerdos-voz'));
 
         // Atajo teclado Alt + T
         document.addEventListener('keydown', (e) => {
@@ -1980,9 +2160,647 @@
                     switchTab('tickets');
                 } else if (!document.getElementById('content-tickets').classList.contains('hidden')) {
                     switchTab('derivaciones');
+                } else if (!document.getElementById('content-derivaciones').classList.contains('hidden')) {
+                    switchTab('directorio');
+                } else if (!document.getElementById('content-directorio').classList.contains('hidden')) {
+                    switchTab('acuerdos-voz');
                 } else {
                     switchTab('generator');
                 }
+            }
+        });
+
+        // =========================================================================
+        // MÓDULO DE ACUERDOS DE VOZ: BASE DE DATOS Y COMPORTAMIENTO
+        // =========================================================================
+        const ACUERDOS_DATA = {
+            migracion: {
+                id: "migracion",
+                num: 1,
+                category: "migracion",
+                badge: "1. Migración Internet",
+                badgeColor: "bg-blue-100 text-blue-800 border-blue-200",
+                buttonColor: "bg-blue-600 hover:bg-blue-700",
+                icon: "fa-solid fa-arrows-rotate",
+                iconColor: "text-blue-600 bg-blue-50 border-blue-200",
+                title: "CONTRATO DE VOZ DE MIGRACIÓN DEL SERVICIO DE INTERNET FIJO POSTPAGO",
+                shortDesc: "Validación de identidad, condiciones del nuevo plan de fibra simétrica (100% fibra, 70% garantizado), comodato de router, ciclo de facturación 12/28, reconexión y tabla de planes.",
+                keywords: ["migracion", "migración", "plan", "internet", "fibra", "velocidad", "simetrica", "simétrica", "win pro", "gamer", "comodato", "reconexión", "reconexion", "postpago", "residencial", "70%", "garantizado"],
+                plainText: `CONTRATO DE VOZ DE MIGRACIÓN DEL SERVICIO DE INTERNET FIJO POSTPAGO
+
+Hoy (día) de (mes) del (año), en la ciudad de decides migrar de plan tarifario del servicio de internet contratado con WIN, para ello me brinda los siguientes datos:
+• Su nombre completo es 
+• Su número de Documento de Identidad / CE / N° RUC (10…) 
+• Lugar y Fecha de Nacimiento 
+• Dirección en la que se brinda el servicio 
+
+El nuevo precio mensual es de S/___________, incluido I.G.V, el servicio de internet es ilimitado, 100% fibra óptica, con velocidad simétrica de ______________Mbps de carga y descarga, aseguramos mínimo el 70% de la velocidad contratada es decir__________ Mbps de carga y descarga, mantienes el equipo terminal router previamente instalado en comodato, el mismo que deberás devolver en buenas condiciones, caso contrario pagarás su valor. El contrato mantendrá su plazo indeterminado y podrá ser resuelto de acuerdo a la normativa de condiciones de uso. La fecha de facturación el 12 de cada mes, y la fecha de vencimiento es el 28 del mismo mes. La tarifa de reconexión es de S/ 4.58, incluye IGV. 
+
+Le agradeceré que diga fuerte y claramente que SÍ ACEPTA los términos de la presente contratación. (CLIENTE RESPONDE).`,
+                planes: [
+                    { plan: "Win Pro 350 Mbps - RET Up To", tipo: "RESIDENCIAL", tarifa: "S/ 69", velocidad: "1000 Mbps", tiempo: "12 meses", garantizado: "245 Mbps" },
+                    { plan: "Win Pro 400 Mbps - RET Up To", tipo: "RESIDENCIAL", tarifa: "S/ 79", velocidad: "700 Mbps", tiempo: "12 meses", garantizado: "280 Mbps" },
+                    { plan: "Win Pro 450 Mbps - RET Up To", tipo: "RESIDENCIAL", tarifa: "S/ 89", velocidad: "1000 Mbps", tiempo: "12 meses", garantizado: "315 Mbps" },
+                    { plan: "Win Pro 500 Mbps - Migración", tipo: "RESIDENCIAL", tarifa: "S/ 99", velocidad: "500 Mbps", tiempo: "Permanente", garantizado: "350 Mbps" },
+                    { plan: "Win Pro 750 Mbps - Migración", tipo: "RESIDENCIAL", tarifa: "S/ 109", velocidad: "750 Mbps", tiempo: "Permanente", garantizado: "525 Mbps" },
+                    { plan: "Win Pro 850 Mbps - Migración", tipo: "RESIDENCIAL", tarifa: "S/ 119", velocidad: "850 Mbps", tiempo: "Permanente", garantizado: "595 Mbps" },
+                    { plan: "Win Pro 1000 Mbps - Migración", tipo: "RESIDENCIAL", tarifa: "S/ 139", velocidad: "1000 Mbps", tiempo: "Permanente", garantizado: "700 Mbps" },
+                    { plan: "NUEVO PLAN GAMER 600 -MIGRA", tipo: "GAMER", tarifa: "S/ 129", velocidad: "600 Mbps", tiempo: "Permanente", garantizado: "420 Mbps" },
+                    { plan: "NUEVO PLAN GAMER 1000 -MIGRA", tipo: "GAMER", tarifa: "S/ 159", velocidad: "1000 Mbps", tiempo: "Permanente", garantizado: "700 Mbps" }
+                ]
+            },
+            suspension: {
+                id: "suspension",
+                num: 2,
+                category: "suspension",
+                badge: "2. Suspensión Temporal",
+                badgeColor: "bg-amber-100 text-amber-800 border-amber-200",
+                buttonColor: "bg-amber-600 hover:bg-amber-700",
+                icon: "fa-solid fa-pause-circle",
+                iconColor: "text-amber-600 bg-amber-50 border-amber-200",
+                title: "CONTRATO DE SUSPENSIÓN TEMPORAL",
+                shortDesc: "Registro de solicitud formal de suspensión temporal de servicio, plazo máximo de ejecución de 72h, fecha de inicio, fecha de reactivación automática y código de solicitud.",
+                keywords: ["suspension", "suspensión", "temporal", "reactivación", "reactivacion", "72 horas", "plazo", "solicitud", "pausa", "codigo", "código"],
+                plainText: `CONTRATO DE SUSPENSIÓN TEMPORAL
+
+"Estimado Sr. (nombre del cliente) siendo las (hora) del día (fecha actual), se está procediendo con el registro de la solicitud de suspensión temporal, recordarle que la suspensión de su servicio se hará efectiva en un plazo no mayor a las 72 horas contados a partir del día de mañana e inicia el (indicar la fecha de inicio), la reactivación automática está programada para el día (indicar la fecha de reactivación).
+
+Para culminar le agradeceré que diga fuerte y claramente que SÍ ACEPTA los términos de la presente contratación.
+
+Hemos registrado con éxito su solicitud de suspensión temporal, tome nota de su código de solicitud."`
+            },
+            servicios_solicitados: {
+                id: "servicios_solicitados",
+                num: 3,
+                category: "servicios",
+                badge: "3. Servicios Solicitados",
+                badgeColor: "bg-emerald-100 text-emerald-800 border-emerald-200",
+                buttonColor: "bg-emerald-600 hover:bg-emerald-700",
+                icon: "fa-solid fa-wrench",
+                iconColor: "text-emerald-600 bg-emerald-50 border-emerald-200",
+                title: "ACUERDO UNIFICADO SERVICIOS SOLICITADOS",
+                shortDesc: "Reinstalación (recableado), Reubicación de ONT, Instalación alámbrica MESH, Traslado de servicio S/1, Cambio de ONT, Cambio de Patchcord y Cableado de Mesh con fraccionamientos.",
+                keywords: ["reinstalacion", "reinstalación", "recableado", "reubicacion", "reubicación", "ont", "mesh", "traslado", "patchcord", "cableado", "fraccionamiento", "cuotas", "servicios solicitados", "24 horas", "s/1", "50%"],
+                plainText: `ACUERDO UNIFICADO SERVICIOS SOLICITADOS
+
+Hoy (día) de (mes) del (año), suscribes con la empresa WIN el acuerdo de (mencionar los que se aceptaron en la negociación):
+- Reinstalación (recableado) (precio regular S/250 que se puede fraccionar a 12 meses, recordar que también se puede ofrecer de forma escalonada al 50% o a S/1, de ser así mencionarlo al hacer lectura)
+- Reubicación de ONT (precio regular S/120 que se puede fraccionar a 6 meses, recordar que también se puede ofrecer de forma escalonada al 50% o a S/1, de ser así mencionarlo al hacer lectura)
+- Instalación alámbrica de equipo no terminal MESH
+- Traslado de servicio
+- Cambio de ONT (precio regular S/220 que se puede fraccionar a 12 meses, recordar que también se puede ofrecer de forma escalonada al 50% o a S/1, de ser así mencionarlo al hacer lectura)
+- Cambio de Cable Patchcord (precio regular S/50 que se puede fraccionar a 3 meses, recordar que también se puede ofrecer de forma escalonada al 50% o a S/1, de ser así mencionarlo al hacer lectura)
+- Cableado de Mesh (precio regular S/150 que se puede fraccionar a 6 meses, recordar que también se puede ofrecer de forma escalonada al 50% o a S/1, de ser así mencionarlo al hacer lectura)
+
+(Asesor pregunta:)
+Por favor me confirma los siguientes datos: 
+• Su nombre completo es … 
+• Su número de Documento de Identidad / N° RUC (10…) 
+• Dirección en que se encuentra instalado el servicio
+
+Por el presente acuerdo, cumplimos con atender tus solicitudes de:
+- Reinstalación (recableado) (precio regular S/250 que se puede fraccionar a 12 meses, recordar que también se puede ofrecer de forma escalonada al 50% o a S/1, de ser así mencionarlo al hacer lectura)
+- Reubicación de ONT (precio regular S/120 que se puede fraccionar a 6 meses, recordar que también se puede ofrecer de forma escalonada al 50% o a S/1, de ser así mencionarlo al hacer lectura)
+- Instalación alámbrica de equipo no terminal MESH
+- Traslado de servicio
+- Cambio de ONT (precio regular S/220 que se puede fraccionar a 12 meses, recordar que también se puede ofrecer de forma escalonada al 50% o a S/1, de ser así mencionarlo al hacer lectura)
+- Cambio de Cable Patchcord (precio regular S/50 que se puede fraccionar a 3 meses, recordar que también se puede ofrecer de forma escalonada al 50% o a S/1, de ser así mencionarlo al hacer lectura)
+- Cableado de Mesh (precio regular S/150 que se puede fraccionar a 6 meses, recordar que también se puede ofrecer de forma escalonada al 50% o a S/1, de ser así mencionarlo al hacer lectura)
+
+(Para los contratos de reinstalación/recableado, cableado de mesh, cambio de ont, reubicación de ont y cambio de patchcord)
+El servicio de reinstalación de fibra óptica/instalación alámbrica/cambio de ont/cambio de cable patchcord/reubicación de ont/ tiene un costo de S/XX incluido I.G.V cada uno, el cual pagarás en una (XX) cuotas en tu siguiente recibo sin intereses. El cambio se encuentra sujeto a facilidades técnicas y se ejecutará en un plazo de veinticuatro (24) horas calendario a partir de tu solicitud.
+
+(Para los contratos de traslado)
+El traslado tiene un costo de S/1 incluido I.G.V. Asimismo, está sujeto a cobertura y alcance del servicio, saturación de red e infraestructura y viabilidad técnica. Debes considerar que serás responsable de trasladar los equipos (ONT y MESH) con sus respectivos enchufes a la nueva dirección del servicio.
+En caso el traslado sea factible, se ejecutará en un plazo de veinticuatro (24) horas calendario caso contrario, se desestimará la ejecución del traslado de su servicio.
+
+Para culminar le agradeceré que diga fuerte y claramente que SÍ ACEPTA los términos de la presente contratación.`
+            },
+            sva: {
+                id: "sva",
+                num: 4,
+                category: "sva",
+                badge: "4. SVAs & Aplicativos",
+                badgeColor: "bg-purple-100 text-purple-800 border-purple-200",
+                buttonColor: "bg-purple-600 hover:bg-purple-700",
+                icon: "fa-solid fa-tv",
+                iconColor: "text-purple-600 bg-purple-50 border-purple-200",
+                title: "ACUERDO UNIFICADO SERVICIOS DE VALOR AGREGADO",
+                shortDesc: "WIN TV (Básico, Plus, Premium, L1Max), DGO Hogar y Full, FONOWIN, MESH, WINBOX, condiciones de portabilidad fija, plazos de activación de apps y entrega de equipos en 24-48h.",
+                keywords: ["sva", "valor agregado", "win tv", "dgo", "fonowin", "mesh", "winbox", "l1max", "portabilidad", "cedente", "aplicativos", "equipos", "comodato", "alquiler", "hogar", "full", "basico", "plus", "premium"],
+                plainText: `ACUERDO UNIFICADO SERVICIOS DE VALOR AGREGADO 
+
+Hoy (día) de (mes) del (año), en la ciudad de _________, usted contrata con WIN, para ello me brinda los siguientes datos:
+• Su nombre completo es
+• Su número de Documento de Identidad / CE /RUC (10…)
+
+De manera adicional e independiente al servicio de internet fijo, mientras mantengas vigente el servicio, accedes a: (Ejm: Sva 1 mencionar precio + Sva 2 precio + Sva 3 ...)
+- WIN TV BASICO S/15 (recordar que también se puede ofrecer a S/1 de forma permanente, de ser así mencionarlo al hacer lectura)
+- WIN TV PLUS con precio mensual de S/25 incluido I.G.V
+- WIN TV PREMIUM con precio mensual de S/49 incluido I.G.V (recordar que también se puede ofrecer a S/0 por 12 meses, de ser así mencionarlo al hacer lectura)
+- WIN TV L1MAX con precio mensual de S/59 incluido I.G.V (recordar que también se puede ofrecer a S/25.90, de ser así mencionarlo al hacer lectura)
+- WIN TV PREMIUM L1MAX con precio mensual de S/69 incluido I.G.V (recordar que también se puede ofrecer a S/0 por 12 meses, de ser así mencionarlo al hacer lectura)
+- DGO HOGAR con precio mensual de S/59 incluido I.G.V (recordar que también se puede ofrecer el RET a S/0 por 2 meses y luego a S/39, de ser así mencionarlo al hacer lectura)
+- DGO FULL con precio mensual de S/76 incluido I.G.V (recordar que también se puede ofrecer el RET a S/0 por 2 meses y luego a S/69, de ser así mencionarlo al hacer lectura)
+- FONOWIN con precio mensual de S/10 incluido I.G.V* - (recordar que también se puede ofrecer a S/1, de ser así mencionarlo al hacer lectura)
+- MESH en comodato / MESH en alquiler con precio mensual de S/9.90 incluido I.G.V ó 2 x S/19.90
+- WINBOX en comodato / WINBOX en alquiler con precio mensual de S/15
+
+*(En caso se trate de portabilidad de otro operador)
+Para fines de la portabilidad solicitada, me confirma lo siguiente: 
+• Concesionario Cedente (Empresa Operadora) 
+• Número Telefónico Fijo a Portar 
+• Modalidad de Pago con el Cedente (Postpago/Prepago)
+El trámite es gratuito, tiene un plazo de 24 horas desde la solicitud y se encuentra sujeto a condiciones técnicas de acuerdo con el Artículo 5 del Reglamento de Portabilidad Numérica.
+
+En caso de alta de aplicativos:
+• WIN TV: La activación de la plataforma ingresada se realiza dentro de las siguientes 24 horas calendario y se enviará al correo electrónico registrado en nuestros sistemas.
+• DGO: La activación es en 24 horas calendario y se ingresa al aplicativo con las mismas credenciales de Mi Portal WIN.
+
+En caso de alta de equipos: 
+La entrega se realizará en el domicilio del servicio de internet dentro de las siguientes 24 a 48 horas, el titular deberá exhibir el DNI/CE en físico, para validar su identidad, y suscribir el Acta de Entrega.
+
+Para culminar le agradeceré que diga fuerte y claramente que SÍ ACEPTA los términos de la presente contratación.`
+            },
+            baja_sva: {
+                id: "baja_sva",
+                num: 5,
+                category: "baja",
+                badge: "5. Baja de SVAs & Equipos",
+                badgeColor: "bg-red-100 text-red-800 border-red-200",
+                buttonColor: "bg-red-600 hover:bg-red-700",
+                icon: "fa-solid fa-user-xmark",
+                iconColor: "text-red-600 bg-red-50 border-red-200",
+                title: "ACUERDO UNIFICADO PARA BAJA DE SERVICIOS DE VALOR AGREGADO (SVAS/EQUIPOS)",
+                shortDesc: "Grabación formal de voz para desuscripción de servicios adicionales/SVAs y equipos, validación de datos del titular, plazo de 24h hábiles para desactivación y coordinación de recojo.",
+                keywords: ["baja", "desuscripcion", "desuscripción", "sva", "equipos", "24 horas", "recojo", "cancelacion", "cancelación", "devolucion", "devolución", "desactivacion", "desactivación"],
+                plainText: `ACUERDO UNIFICADO PARA BAJA DE SERVICIOS DE VALOR AGREGADO (SVAS/EQUIPOS)
+
+Comprendemos la decisión tomada en ese sentido vamos a realizar la grabación de voz para generar la desuscripción de los siguientes servicios 
+
+Porfavor me confirma los siguientes datos :
+• Su nombre completo es … 
+• Su número de Documento de Identidad / N° RUC (10…) 
+• Teléfono
+• Dirección en que se encuentra instalado el servicio
+
+Hoy (día) de (mes) del (año), siendo las (HORAS), estamos procesando la baja de los servicios (hacer mencion de los SVAS a proceder en baja), así mismo, indicarle que dentro de las siguientes 24 horas hábiles se estarán desactivando los servicios adicionales, y posteriormente se estará coordinando el recojo de los equipos si así lo amerita. 
+
+Sr.(a) (NOMBRE Y APELLIDO), ¿la información brindada ha sido clara? 
+
+Sr.(a) XXX , agradecemos su comunicación y de igual manera pedimos las disculpas por las molestias ocasionadas estamos en constante crecimiento y nuestra prioridad son nuestros clientes.`
+            }
+        };
+
+        // Renderizado interactivo de las tarjetas de acuerdos
+        function renderAcuerdosCards(filterText = '', filterCategory = 'all') {
+            if (!elAcuerdosCardsGrid) return;
+            
+            const query = filterText.toLowerCase().trim();
+            const keys = Object.keys(ACUERDOS_DATA);
+            let visibleCount = 0;
+            let html = '';
+
+            keys.forEach(key => {
+                const item = ACUERDOS_DATA[key];
+                
+                // Filtro por categoría
+                const matchesCategory = filterCategory === 'all' || item.category === filterCategory;
+                
+                // Filtro por texto
+                const matchesText = !query || 
+                    item.title.toLowerCase().includes(query) ||
+                    item.shortDesc.toLowerCase().includes(query) ||
+                    item.plainText.toLowerCase().includes(query) ||
+                    item.keywords.some(k => k.toLowerCase().includes(query));
+
+                if (matchesCategory && matchesText) {
+                    visibleCount++;
+                    html += `
+                        <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm hover:shadow-xl hover:border-purple-300 transition-all duration-300 flex flex-col justify-between gap-4 group">
+                            <div class="space-y-3">
+                                <div class="flex items-center justify-between gap-2">
+                                    <span class="text-[10px] font-extrabold uppercase px-2.5 py-1 rounded-full border ${item.badgeColor}">
+                                        ${item.badge}
+                                    </span>
+                                    <div class="w-8 h-8 rounded-xl flex items-center justify-center text-sm font-bold border ${item.iconColor}">
+                                        <i class="${item.icon}"></i>
+                                    </div>
+                                </div>
+                                <h3 class="text-sm font-extrabold text-slate-900 group-hover:text-purple-700 transition-colors line-clamp-2 leading-snug">
+                                    ${item.title}
+                                </h3>
+                                <p class="text-xs text-slate-500 line-clamp-3 leading-relaxed">
+                                    ${item.shortDesc}
+                                </p>
+                            </div>
+
+                            <div class="pt-3 border-t border-slate-100 flex items-center gap-2">
+                                <button onclick="openAcuerdoModal('${item.id}')" class="flex-1 ${item.buttonColor} text-white font-bold py-2.5 px-3 rounded-xl text-xs transition-all flex items-center justify-center gap-2 shadow-sm active:scale-95">
+                                    <i class="fa-solid fa-up-right-from-square text-[11px]"></i>
+                                    <span>Abrir Contrato</span>
+                                </button>
+                                <button onclick="copyAcuerdoText('${item.id}', this)" class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold p-2.5 rounded-xl text-xs transition-all active:scale-95 shrink-0" title="Copiar texto del guion">
+                                    <i class="fa-regular fa-copy text-sm"></i>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                }
+            });
+
+            elAcuerdosCardsGrid.innerHTML = html;
+
+            if (visibleCount === 0) {
+                elAcuerdosCardsGrid.classList.add('hidden');
+                if (elAcuerdosEmptyState) elAcuerdosEmptyState.classList.remove('hidden');
+            } else {
+                elAcuerdosCardsGrid.classList.remove('hidden');
+                if (elAcuerdosEmptyState) elAcuerdosEmptyState.classList.add('hidden');
+            }
+        }
+
+        // Abrir Popup Modal
+        function openAcuerdoModal(key) {
+            const item = ACUERDOS_DATA[key];
+            if (!item || !elModalAcuerdo) return;
+
+            currentModalAcuerdoKey = key;
+            elModalAcuerdoBadge.textContent = item.badge;
+            elModalAcuerdoTitle.textContent = item.title;
+            elModalAcuerdoIcon.className = item.icon;
+
+            let bodyHtml = '';
+
+            if (key === 'migracion') {
+                bodyHtml = `
+                    <!-- Resumen / Datos Requeridos -->
+                    <div class="bg-blue-50/70 border border-blue-200 p-4 rounded-xl">
+                        <h4 class="text-xs font-bold text-blue-900 uppercase flex items-center gap-2 mb-2">
+                            <i class="fa-solid fa-user-check text-blue-600"></i> Datos obligatorios a validar con el titular:
+                        </h4>
+                        <ul class="text-xs text-blue-800 space-y-1 ml-4 list-disc font-medium">
+                            <li>Nombre completo del titular</li>
+                            <li>Número de Documento de Identidad / CE / N° RUC (10…)</li>
+                            <li>Lugar y Fecha de Nacimiento</li>
+                            <li>Dirección exacta en la que se brinda el servicio</li>
+                        </ul>
+                    </div>
+
+                    <!-- Guion Oficial de Lectura -->
+                    <div class="bg-white border-2 border-slate-200 p-4 md:p-5 rounded-xl shadow-sm space-y-3">
+                        <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+                            <span class="text-xs font-extrabold text-slate-800 uppercase tracking-wide flex items-center gap-2">
+                                <i class="fa-solid fa-microphone text-purple-600"></i> Guion de Grabación de Voz
+                            </span>
+                            <span class="text-[10px] bg-slate-100 text-slate-600 px-2 py-0.5 rounded font-bold">Lectura Literal</span>
+                        </div>
+                        <div class="font-mono text-xs md:text-sm text-slate-800 bg-slate-50 p-4 rounded-lg border border-slate-200 whitespace-pre-wrap leading-relaxed">Hoy (día) de (mes) del (año), en la ciudad de decides migrar de plan tarifario del servicio de internet contratado con WIN, para ello me brinda los siguientes datos:
+• Su nombre completo es 
+• Su número de Documento de Identidad / CE / N° RUC (10…) 
+• Lugar y Fecha de Nacimiento 
+• Dirección en la que se brinda el servicio 
+
+El nuevo precio mensual es de S/___________, incluido I.G.V, el servicio de internet es ilimitado, 100% fibra óptica, con velocidad simétrica de ______________Mbps de carga y descarga, aseguramos mínimo el 70% de la velocidad contratada es decir__________ Mbps de carga y descarga, mantienes el equipo terminal router previamente instalado en comodato, el mismo que deberás devolver en buenas condiciones, caso contrario pagarás su valor. El contrato mantendrá su plazo indeterminado y podrá ser resuelto de acuerdo a la normativa de condiciones de uso. La fecha de facturación el 12 de cada mes, y la fecha de vencimiento es el 28 del mismo mes. La tarifa de reconexión es de S/ 4.58, incluye IGV. 
+
+Le agradeceré que diga fuerte y claramente que SÍ ACEPTA los términos de la presente contratación. (CLIENTE RESPONDE).</div>
+                    </div>
+
+                    <!-- Tabla Oficial de Planes -->
+                    <div class="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+                        <div class="bg-slate-900 text-white px-4 py-2.5 font-bold text-xs uppercase flex items-center justify-between">
+                            <span><i class="fa-solid fa-table-list text-purple-400 mr-2"></i> Tabla Oficial de Planes Tarifarios</span>
+                            <span class="text-[10px] text-slate-300">Valores de NCE y 70% Garantizado</span>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-slate-200 text-xs text-left">
+                                <thead class="bg-slate-100 text-slate-700 font-extrabold">
+                                    <tr>
+                                        <th class="px-3 py-2.5">Plan Contratado</th>
+                                        <th class="px-3 py-2.5">Tipo Plan</th>
+                                        <th class="px-3 py-2.5 text-center">Tarifa</th>
+                                        <th class="px-3 py-2.5 text-center">Velocidad (NCE)</th>
+                                        <th class="px-3 py-2.5 text-center">Tiempo</th>
+                                        <th class="px-3 py-2.5 text-center text-purple-700 font-black">70% Garantizado</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-200">
+                                    ${item.planes.map(p => `
+                                        <tr class="hover:bg-purple-50/50 transition">
+                                            <td class="px-3 py-2 font-bold text-slate-900">${p.plan}</td>
+                                            <td class="px-3 py-2 text-slate-600"><span class="px-1.5 py-0.5 rounded text-[10px] font-bold ${p.tipo === 'GAMER' ? 'bg-indigo-100 text-indigo-800' : 'bg-slate-100 text-slate-700'}">${p.tipo}</span></td>
+                                            <td class="px-3 py-2 text-center font-black text-emerald-700 font-mono">${p.tarifa}</td>
+                                            <td class="px-3 py-2 text-center font-bold text-blue-700">${p.velocidad}</td>
+                                            <td class="px-3 py-2 text-center text-slate-600">${p.tiempo}</td>
+                                            <td class="px-3 py-2 text-center font-extrabold text-purple-800">${p.garantizado}</td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                `;
+            } else if (key === 'suspension') {
+                bodyHtml = `
+                    <div class="bg-amber-50/80 border border-amber-200 p-4 rounded-xl">
+                        <h4 class="text-xs font-bold text-amber-900 uppercase flex items-center gap-2 mb-1.5">
+                            <i class="fa-solid fa-clock text-amber-600"></i> Condiciones de Suspensión Temporal:
+                        </h4>
+                        <p class="text-xs text-amber-800 font-medium leading-relaxed">
+                            • La suspensión se hace efectiva en un plazo no mayor a 72 horas contados a partir del día siguiente.<br>
+                            • Indicar obligatoriamente la fecha exacta de inicio y la fecha de reactivación automática.<br>
+                            • Brindar siempre el código de solicitud al cliente antes de finalizar la llamada.
+                        </p>
+                    </div>
+
+                    <div class="bg-white border-2 border-slate-200 p-4 md:p-5 rounded-xl shadow-sm space-y-3">
+                        <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+                            <span class="text-xs font-extrabold text-slate-800 uppercase tracking-wide flex items-center gap-2">
+                                <i class="fa-solid fa-microphone text-purple-600"></i> Guion de Grabación de Voz
+                            </span>
+                            <span class="text-[10px] bg-slate-100 text-slate-600 px-2 py-0.5 rounded font-bold">Lectura Literal</span>
+                        </div>
+                        <div class="font-mono text-xs md:text-sm text-slate-800 bg-slate-50 p-4 rounded-lg border border-slate-200 whitespace-pre-wrap leading-relaxed">"Estimado Sr. (nombre del cliente) siendo las (hora) del día (fecha actual), se está procediendo con el registro de la solicitud de suspensión temporal, recordarle que la suspensión de su servicio se hará efectiva en un plazo no mayor a las 72 horas contados a partir del día de mañana e inicia el (indicar la fecha de inicio), la reactivación automática está programada para el día (indicar la fecha de reactivación).
+
+Para culminar le agradeceré que diga fuerte y claramente que SÍ ACEPTA los términos de la presente contratación.
+
+Hemos registrado con éxito su solicitud de suspensión temporal, tome nota de su código de solicitud."</div>
+                    </div>
+                `;
+            } else if (key === 'servicios_solicitados') {
+                bodyHtml = `
+                    <div class="bg-emerald-50/80 border border-emerald-200 p-4 rounded-xl">
+                        <h4 class="text-xs font-bold text-emerald-900 uppercase flex items-center gap-2 mb-2">
+                            <i class="fa-solid fa-list-check text-emerald-600"></i> Servicios Incluidos y Precios Comerciales:
+                        </h4>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-emerald-900 font-medium">
+                            <div class="bg-white/80 p-2 rounded-lg border border-emerald-200/60">
+                                <strong>Reinstalación (recableado):</strong> S/250 (12 meses, opción 50% o S/1)
+                            </div>
+                            <div class="bg-white/80 p-2 rounded-lg border border-emerald-200/60">
+                                <strong>Reubicación de ONT:</strong> S/120 (6 meses, opción 50% o S/1)
+                            </div>
+                            <div class="bg-white/80 p-2 rounded-lg border border-emerald-200/60">
+                                <strong>Cambio de ONT:</strong> S/220 (12 meses, opción 50% o S/1)
+                            </div>
+                            <div class="bg-white/80 p-2 rounded-lg border border-emerald-200/60">
+                                <strong>Cableado de Mesh:</strong> S/150 (6 meses, opción 50% o S/1)
+                            </div>
+                            <div class="bg-white/80 p-2 rounded-lg border border-emerald-200/60">
+                                <strong>Cambio de Patchcord:</strong> S/50 (3 meses, opción 50% o S/1)
+                            </div>
+                            <div class="bg-white/80 p-2 rounded-lg border border-emerald-200/60">
+                                <strong>Traslado de servicio:</strong> S/1 incluido IGV
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white border-2 border-slate-200 p-4 md:p-5 rounded-xl shadow-sm space-y-3">
+                        <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+                            <span class="text-xs font-extrabold text-slate-800 uppercase tracking-wide flex items-center gap-2">
+                                <i class="fa-solid fa-microphone text-purple-600"></i> Guion de Grabación de Voz
+                            </span>
+                            <span class="text-[10px] bg-slate-100 text-slate-600 px-2 py-0.5 rounded font-bold">Lectura Literal</span>
+                        </div>
+                        <div class="font-mono text-xs md:text-sm text-slate-800 bg-slate-50 p-4 rounded-lg border border-slate-200 whitespace-pre-wrap leading-relaxed">Hoy (día) de (mes) del (año), suscribes con la empresa WIN el acuerdo de (mencionar los que se aceptaron en la negociación):
+- Reinstalación (recableado) (precio regular S/250 que se puede fraccionar a 12 meses, recordar que también se puede ofrecer de forma escalonada al 50% o a S/1, de ser así mencionarlo al hacer lectura)
+- Reubicación de ONT (precio regular S/120 que se puede fraccionar a 6 meses, recordar que también se puede ofrecer de forma escalonada al 50% o a S/1, de ser así mencionarlo al hacer lectura)
+- Instalación alámbrica de equipo no terminal MESH
+- Traslado de servicio
+- Cambio de ONT (precio regular S/220 que se puede fraccionar a 12 meses, recordar que también se puede ofrecer de forma escalonada al 50% o a S/1, de ser así mencionarlo al hacer lectura)
+- Cambio de Cable Patchcord (precio regular S/50 que se puede fraccionar a 3 meses, recordar que también se puede ofrecer de forma escalonada al 50% o a S/1, de ser así mencionarlo al hacer lectura)
+- Cableado de Mesh (precio regular S/150 que se puede fraccionar a 6 meses, recordar que también se puede ofrecer de forma escalonada al 50% o a S/1, de ser así mencionarlo al hacer lectura)
+
+(Asesor pregunta:)
+Por favor me confirma los siguientes datos: 
+• Su nombre completo es … 
+• Su número de Documento de Identidad / N° RUC (10…) 
+• Dirección en que se encuentra instalado el servicio
+
+Por el presente acuerdo, cumplimos con atender tus solicitudes de:
+- Reinstalación (recableado) (precio regular S/250 que se puede fraccionar a 12 meses, recordar que también se puede ofrecer de forma escalonada al 50% o a S/1, de ser así mencionarlo al hacer lectura)
+- Reubicación de ONT (precio regular S/120 que se puede fraccionar a 6 meses, recordar que también se puede ofrecer de forma escalonada al 50% o a S/1, de ser así mencionarlo al hacer lectura)
+- Instalación alámbrica de equipo no terminal MESH
+- Traslado de servicio
+- Cambio de ONT (precio regular S/220 que se puede fraccionar a 12 meses, recordar que también se puede ofrecer de forma escalonada al 50% o a S/1, de ser así mencionarlo al hacer lectura)
+- Cambio de Cable Patchcord (precio regular S/50 que se puede fraccionar a 3 meses, recordar que también se puede ofrecer de forma escalonada al 50% o a S/1, de ser así mencionarlo al hacer lectura)
+- Cableado de Mesh (precio regular S/150 que se puede fraccionar a 6 meses, recordar que también se puede ofrecer de forma escalonada al 50% o a S/1, de ser así mencionarlo al hacer lectura)
+
+(Para los contratos de reinstalación/recableado, cableado de mesh, cambio de ont, reubicación de ont y cambio de patchcord)
+El servicio de reinstalación de fibra óptica/instalación alámbrica/cambio de ont/cambio de cable patchcord/reubicación de ont/ tiene un costo de S/XX incluido I.G.V cada uno, el cual pagarás en una (XX) cuotas en tu siguiente recibo sin intereses. El cambio se encuentra sujeto a facilidades técnicas y se ejecutará en un plazo de veinticuatro (24) horas calendario a partir de tu solicitud.
+
+(Para los contratos de traslado)
+El traslado tiene un costo de S/1 incluido I.G.V. Asimismo, está sujeto a cobertura y alcance del servicio, saturación de red e infraestructura y viabilidad técnica. Debes considerar que serás responsable de trasladar los equipos (ONT y MESH) con sus respectivos enchufes a la nueva dirección del servicio.
+En caso el traslado sea factible, se ejecutará en un plazo de veinticuatro (24) horas calendario caso contrario, se desestimará la ejecución del traslado de su servicio.
+
+Para culminar le agradeceré que diga fuerte y claramente que SÍ ACEPTA los términos de la presente contratación.</div>
+                    </div>
+                `;
+            } else if (key === 'sva') {
+                bodyHtml = `
+                    <div class="bg-purple-50/80 border border-purple-200 p-4 rounded-xl space-y-3">
+                        <h4 class="text-xs font-bold text-purple-900 uppercase flex items-center gap-2">
+                            <i class="fa-solid fa-tv text-purple-600"></i> Catálogo y Condiciones de SVAs & Equipos:
+                        </h4>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-purple-950 font-medium">
+                            <div class="bg-white p-2.5 rounded-lg border border-purple-200">
+                                <strong class="text-purple-900">WIN TV:</strong> Básico S/15 (o S/1 perm.), Plus S/25, Premium S/49 (o S/0 x 12m), L1MAX S/59 (o S/25.90), Premium L1MAX S/69 (o S/0 x 12m).
+                            </div>
+                            <div class="bg-white p-2.5 rounded-lg border border-purple-200">
+                                <strong class="text-purple-900">DGO:</strong> Hogar S/59 (o RET S/0 x 2m luego S/39), Full S/76 (o RET S/0 x 2m luego S/69).
+                            </div>
+                            <div class="bg-white p-2.5 rounded-lg border border-purple-200">
+                                <strong class="text-purple-900">FONOWIN:</strong> S/10 incluido IGV (o S/1).
+                            </div>
+                            <div class="bg-white p-2.5 rounded-lg border border-purple-200">
+                                <strong class="text-purple-900">EQUIPOS:</strong> MESH S/9.90 (2x S/19.90), WINBOX S/15 en comodato/alquiler.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white border-2 border-slate-200 p-4 md:p-5 rounded-xl shadow-sm space-y-3">
+                        <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+                            <span class="text-xs font-extrabold text-slate-800 uppercase tracking-wide flex items-center gap-2">
+                                <i class="fa-solid fa-microphone text-purple-600"></i> Guion de Grabación de Voz
+                            </span>
+                            <span class="text-[10px] bg-slate-100 text-slate-600 px-2 py-0.5 rounded font-bold">Lectura Literal</span>
+                        </div>
+                        <div class="font-mono text-xs md:text-sm text-slate-800 bg-slate-50 p-4 rounded-lg border border-slate-200 whitespace-pre-wrap leading-relaxed">Hoy (día) de (mes) del (año), en la ciudad de _________, usted contrata con WIN, para ello me brinda los siguientes datos:
+• Su nombre completo es
+• Su número de Documento de Identidad / CE /RUC (10…)
+
+De manera adicional e independiente al servicio de internet fijo, mientras mantengas vigente el servicio, accedes a: (Ejm: Sva 1 mencionar precio + Sva 2 precio + Sva 3 ...)
+- WIN TV BASICO S/15 (recordar que también se puede ofrecer a S/1 de forma permanente, de ser así mencionarlo al hacer lectura)
+- WIN TV PLUS con precio mensual de S/25 incluido I.G.V
+- WIN TV PREMIUM con precio mensual de S/49 incluido I.G.V (recordar que también se puede ofrecer a S/0 por 12 meses, de ser así mencionarlo al hacer lectura)
+- WIN TV L1MAX con precio mensual de S/59 incluido I.G.V (recordar que también se puede ofrecer a S/25.90, de ser así mencionarlo al hacer lectura)
+- WIN TV PREMIUM L1MAX con precio mensual de S/69 incluido I.G.V (recordar que también se puede ofrecer a S/0 por 12 meses, de ser así mencionarlo al hacer lectura)
+- DGO HOGAR con precio mensual de S/59 incluido I.G.V (recordar que también se puede ofrecer el RET a S/0 por 2 meses y luego a S/39, de ser así mencionarlo al hacer lectura)
+- DGO FULL con precio mensual de S/76 incluido I.G.V (recordar que también se puede ofrecer el RET a S/0 por 2 meses y luego a S/69, de ser así mencionarlo al hacer lectura)
+- FONOWIN con precio mensual de S/10 incluido I.G.V* - (recordar que también se puede ofrecer a S/1, de ser así mencionarlo al hacer lectura)
+- MESH en comodato / MESH en alquiler con precio mensual de S/9.90 incluido I.G.V ó 2 x S/19.90
+- WINBOX en comodato / WINBOX en alquiler con precio mensual de S/15
+
+*(En caso se trate de portabilidad de otro operador)
+Para fines de la portabilidad solicitada, me confirma lo siguiente: 
+• Concesionario Cedente (Empresa Operadora) 
+• Número Telefónico Fijo a Portar 
+• Modalidad de Pago con el Cedente (Postpago/Prepago)
+El trámite es gratuito, tiene un plazo de 24 horas desde la solicitud y se encuentra sujeto a condiciones técnicas de acuerdo con el Artículo 5 del Reglamento de Portabilidad Numérica.
+
+En caso de alta de aplicativos:
+• WIN TV: La activación de la plataforma ingresada se realiza dentro de las siguientes 24 horas calendario y se enviará al correo electrónico registrado en nuestros sistemas.
+• DGO: La activación es en 24 horas calendario y se ingresa al aplicativo con las mismas credenciales de Mi Portal WIN.
+
+En caso de alta de equipos: 
+La entrega se realizará en el domicilio del servicio de internet dentro de las siguientes 24 a 48 horas, el titular deberá exhibir el DNI/CE en físico, para validar su identidad, y suscribir el Acta de Entrega.
+
+Para culminar le agradeceré que diga fuerte y claramente que SÍ ACEPTA los términos de la presente contratación.</div>
+                    </div>
+                `;
+            } else if (key === 'baja_sva') {
+                bodyHtml = `
+                    <div class="bg-red-50/80 border border-red-200 p-4 rounded-xl">
+                        <h4 class="text-xs font-bold text-red-900 uppercase flex items-center gap-2 mb-1.5">
+                            <i class="fa-solid fa-triangle-exclamation text-red-600"></i> Protocolo de Baja de SVAs y Equipos:
+                        </h4>
+                        <p class="text-xs text-red-800 font-medium leading-relaxed">
+                            • Desactivación de servicios adicionales en un plazo máximo de 24 horas hábiles.<br>
+                            • Coordinación de recojo de equipos en comodato/alquiler en domicilio si aplica.<br>
+                            • Formular la pregunta de claridad al titular antes de la despedida.
+                        </p>
+                    </div>
+
+                    <div class="bg-white border-2 border-slate-200 p-4 md:p-5 rounded-xl shadow-sm space-y-3">
+                        <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+                            <span class="text-xs font-extrabold text-slate-800 uppercase tracking-wide flex items-center gap-2">
+                                <i class="fa-solid fa-microphone text-purple-600"></i> Guion de Grabación de Voz
+                            </span>
+                            <span class="text-[10px] bg-slate-100 text-slate-600 px-2 py-0.5 rounded font-bold">Lectura Literal</span>
+                        </div>
+                        <div class="font-mono text-xs md:text-sm text-slate-800 bg-slate-50 p-4 rounded-lg border border-slate-200 whitespace-pre-wrap leading-relaxed">Comprendemos la decisión tomada en ese sentido vamos a realizar la grabación de voz para generar la desuscripción de los siguientes servicios 
+
+Porfavor me confirma los siguientes datos :
+• Su nombre completo es … 
+• Su número de Documento de Identidad / N° RUC (10…) 
+• Teléfono
+• Dirección en que se encuentra instalado el servicio
+
+Hoy (día) de (mes) del (año), siendo las (HORAS), estamos procesando la baja de los servicios (hacer mencion de los SVAS a proceder en baja), así mismo, indicarle que dentro de las siguientes 24 horas hábiles se estarán desactivando los servicios adicionales, y posteriormente se estará coordinando el recojo de los equipos si así lo amerita. 
+
+Sr.(a) (NOMBRE Y APELLIDO), ¿la información brindada ha sido clara? 
+
+Sr.(a) XXX , agradecemos su comunicación y de igual manera pedimos las disculpas por las molestias ocasionadas estamos en constante crecimiento y nuestra prioridad son nuestros clientes.</div>
+                    </div>
+                `;
+            }
+
+            elModalAcuerdoBody.innerHTML = bodyHtml;
+            elModalAcuerdo.classList.remove('hidden');
+            document.body.classList.add('overflow-hidden');
+        }
+
+        // Cerrar Popup Modal
+        function closeAcuerdoModal() {
+            if (!elModalAcuerdo) return;
+            elModalAcuerdo.classList.add('hidden');
+            document.body.classList.remove('overflow-hidden');
+            currentModalAcuerdoKey = null;
+        }
+
+        // Copiar texto del acuerdo
+        function copyAcuerdoText(key, btnElement) {
+            const item = ACUERDOS_DATA[key];
+            if (!item) return;
+
+            let textToCopy = item.plainText;
+            if (item.planes && item.planes.length > 0) {
+                textToCopy += "\n\nTABLA DE PLANES:\n" + item.planes.map(p => `- ${p.plan} | ${p.tipo} | ${p.tarifa} | NCE: ${p.velocidad} | ${p.tiempo} | 70% Garantizado: ${p.garantizado}`).join("\n");
+            }
+
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                showToast("¡Guion copiado al portapapeles con éxito!", "success");
+                if (btnElement) {
+                    const originalHTML = btnElement.innerHTML;
+                    btnElement.innerHTML = '<i class="fa-solid fa-check text-emerald-600"></i>';
+                    setTimeout(() => {
+                        btnElement.innerHTML = originalHTML;
+                    }, 1500);
+                }
+            }).catch(() => {
+                showToast("No se pudo copiar automáticamente.", "error");
+            });
+        }
+
+        function copyCurrentModalAcuerdo() {
+            if (!currentModalAcuerdoKey) return;
+            const btnHeader = document.getElementById('btn-modal-copy-header');
+            const btnFooter = document.getElementById('btn-modal-copy-footer');
+            copyAcuerdoText(currentModalAcuerdoKey);
+
+            if (btnHeader) {
+                const orig = btnHeader.innerHTML;
+                btnHeader.innerHTML = '<i class="fa-solid fa-check text-emerald-300"></i> <span class="hidden sm:inline">¡Copiado!</span>';
+                setTimeout(() => { btnHeader.innerHTML = orig; }, 1500);
+            }
+            if (btnFooter) {
+                const orig = btnFooter.innerHTML;
+                btnFooter.innerHTML = '<i class="fa-solid fa-check text-emerald-300"></i> <span>¡Guion Copiado!</span>';
+                setTimeout(() => { btnFooter.innerHTML = orig; }, 1500);
+            }
+        }
+
+        // Filtro por categoría en Acuerdos de Voz
+        function filterAcuerdosCategory(category) {
+            currentAcuerdoCategory = category;
+            const buttons = document.querySelectorAll('.acuerdos-filter-btn');
+            buttons.forEach(btn => {
+                if (btn.getAttribute('data-category') === category) {
+                    btn.className = "acuerdos-filter-btn active bg-purple-700 text-white font-bold px-3 py-1.5 rounded-xl transition shrink-0 shadow-sm";
+                } else {
+                    btn.className = "acuerdos-filter-btn bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold px-3 py-1.5 rounded-xl transition shrink-0";
+                }
+            });
+
+            const query = elAcuerdosSearchInput ? elAcuerdosSearchInput.value : '';
+            renderAcuerdosCards(query, currentAcuerdoCategory);
+        }
+
+        // Limpiar búsqueda
+        function clearAcuerdosSearch() {
+            if (elAcuerdosSearchInput) elAcuerdosSearchInput.value = '';
+            if (elAcuerdosSearchClear) elAcuerdosSearchClear.classList.add('hidden');
+            filterAcuerdosCategory('all');
+        }
+
+        // Escuchadores de eventos para búsqueda en Acuerdos de Voz
+        if (elAcuerdosSearchInput) {
+            elAcuerdosSearchInput.addEventListener('input', (e) => {
+                const val = e.target.value;
+                if (elAcuerdosSearchClear) {
+                    if (val.trim().length > 0) {
+                        elAcuerdosSearchClear.classList.remove('hidden');
+                    } else {
+                        elAcuerdosSearchClear.classList.add('hidden');
+                    }
+                }
+                renderAcuerdosCards(val, currentAcuerdoCategory);
+            });
+        }
+
+        // Cerrar modal al hacer clic en el backdrop
+        if (elModalAcuerdo) {
+            elModalAcuerdo.addEventListener('click', (e) => {
+                if (e.target === elModalAcuerdo) {
+                    closeAcuerdoModal();
+                }
+            });
+        }
+
+        // Cerrar modal con tecla Escape
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && elModalAcuerdo && !elModalAcuerdo.classList.contains('hidden')) {
+                closeAcuerdoModal();
             }
         });
 

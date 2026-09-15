@@ -22,7 +22,7 @@
     <meta name="theme-color" content="#FF5E00">
     <meta name="author" content="Jhonny Eduar León Illescas - Fidelizaciones WIN">
     <meta name="copyright" content="CRONOS FID - WIN 2026">
-    <meta name="version" content="3.7">
+    <meta name="version" content="3.8">
 
     <!--
       CRONOS FID
@@ -392,7 +392,7 @@
             <i class="fa-solid fa-circle-info text-blue-500 text-lg mt-0.5"></i>
             <div>
                 <p class="text-sm text-blue-800 font-medium">
-                    Generador de clave secreta. Haz clic en <strong class="font-bold">"Generar Nueva Clave"</strong> o presiona la tecla <kbd class="bg-blue-200 px-1.5 py-0.5 rounded text-xs font-mono font-bold">F9</kbd> en tu teclado para cambiar el código. Puedes personalizar el nombre del cliente para actualizar automáticamente el correo listo para enviar.
+                    Generador de clave secreta. Haz clic en 'Generar Nueva Clave' para obtener un nuevo código de verificación. Puedes personalizar el nombre del cliente para actualizar automáticamente el correo listo para enviar.
                 </p>
             </div>
         </div>
@@ -439,7 +439,7 @@
                     <!-- Botón Generar Clave (Acción Principal) -->
                     <button id="btn-generate" class="w-full bg-win-orange hover:bg-win-orangeHover text-white font-bold py-4 px-6 rounded-xl shadow-md transition-all transform active:scale-98 flex items-center justify-center gap-2 text-lg">
                         <i class="fa-solid fa-arrows-rotate"></i>
-                        Generar Nueva Clave <span class="text-xs bg-black/15 px-1.5 py-0.5 rounded font-mono font-normal">F9</span>
+                        Generar Nueva Clave
                     </button>
                 </div>
 
@@ -1279,10 +1279,13 @@
 
                         </div>
 
-                        <!-- Footer del Simulador con Botón Copiar Registro -->
-                        <div class="bg-slate-50 border-t border-slate-100 p-4 flex gap-2">
-                            <button onclick="copyFullRegistration()" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-2.5 rounded-lg text-sm transition flex items-center justify-center gap-2">
-                                <i class="fa-solid fa-copy"></i> Copiar Registro Completo
+                        <!-- Footer del Simulador con Botón Copiar y Limpiar Registro -->
+                        <div class="bg-slate-50 border-t border-slate-100 p-4 flex gap-3">
+                            <button onclick="copiarPlantilla()" class="flex-1 bg-slate-900 hover:bg-slate-800 text-white font-bold py-2.5 rounded-lg text-sm transition flex items-center justify-center gap-2 shadow-sm cursor-pointer" title="Copiar plantilla al portapapeles">
+                                <i class="fa-solid fa-copy"></i> COPIAR
+                            </button>
+                            <button onclick="cleanSimulation()" class="flex-1 bg-slate-700 hover:bg-slate-800 text-white font-bold py-2.5 rounded-lg text-sm transition flex items-center justify-center gap-2 shadow-sm cursor-pointer border border-slate-600/30" title="Limpiar datos del registro y observaciones">
+                                <i class="fa-solid fa-trash-can"></i> LIMPIAR REGISTRO
                             </button>
                         </div>
 
@@ -1548,7 +1551,7 @@
                 <span class="text-zinc-500">|</span>
                 <span>Plataforma de Fidelización Ágil de WIN 2026</span>
                 <span class="text-zinc-500">|</span>
-                <span class="text-zinc-400 font-semibold">CRONOS FID - JELI v3.7</span>
+                <span class="text-zinc-400 font-semibold">CRONOS FID - JELI v3.8</span>
             </div>
 
             <!-- Derecha: Logotipo Corporativo -->
@@ -1589,7 +1592,7 @@
                 tipo: "Clientes No Gestionables",
                 motivos: ["Reclamos", "Fraude", "Usuarios", "Instalación no concretada / incompleta", "Convenio", "Cliente Suspendido"],
                 descripcion: "Registro de baja que no se debe tipificar a menos que se tenga autorización expresa del supervisor.",
-                observaciones: "|Id: XXXXXXXXXXXXXXXXXXXXX |\n|COD PEDIDO|",
+                observaciones: "|Id: XXXXXXXXXXXXXXXXXXXXX |\n|COD PEDIDO|\n|Herramientas de retención|",
                 fidelizacion: false,
                 baja: true
             },
@@ -1601,7 +1604,7 @@
                 tipo: "Competencia",
                 motivos: ["CLARO", "MOVISTAR", "DIRECTV", "ENTEL", "WOW", "No menciona/Otra empresa", "Bantel", "Bitel", "MIFIBRA", "FiberPRO", "Nubyx", "WIN NEGOCIOS/EMPRESAS", "Negociación Interrumpida"],
                 descripcion: "Registro de baja porque el cliente ha decidido migrar por oferta recibida de otro operador competidor.",
-                observaciones: "|Id: XXXXXXXXXXXXXXXXXXXXX |\n|COD PEDIDO|",
+                observaciones: "|Id: XXXXXXXXXXXXXXXXXXXXX |\n|COD PEDIDO|\n|Herramientas de retención|",
                 fidelizacion: false,
                 baja: true
             },
@@ -1613,7 +1616,7 @@
                 tipo: "Facturación",
                 motivos: ["Cobro de prorrateo / cuota instalación", "Demora en emisión recibo", "Ajuste/Descuento/Devolución no realizado", "No reconoce monto", "Error en el cargo fijo", "Se facturó estando suspendido el servicio", "No reconoce cargos por servicios solicitados", "No envío de recibo", "Negociación Interrumpida"],
                 descripcion: "Registro de baja debido a inconformidad o problemas recurrentes con su recibo o facturación mensual.",
-                observaciones: "|Id: XXXXXXXXXXXXXXXXXXXXX |\n|COD PEDIDO|",
+                observaciones: "|Id: XXXXXXXXXXXXXXXXXXXXX |\n|COD PEDIDO|\n|Herramientas de retención|",
                 fidelizacion: false,
                 baja: true
             },
@@ -1625,7 +1628,7 @@
                 tipo: "FLIPPING",
                 motivos: ["A NOMBRE DEL MISMO CLIENTE", "A NOMBRE DE UN FAMILIAR / AMIGO"],
                 descripcion: "Registro de baja cuando el cliente intenta cancelar el servicio para dar un alta nueva con promociones a nombre propio o familiar.",
-                observaciones: "|Id: XXXXXXXXXXXXXXXXXXXXX |\n|COD PEDIDO|",
+                observaciones: "|Id: XXXXXXXXXXXXXXXXXXXXX |\n|COD PEDIDO|\n|Herramientas de retención|",
                 fidelizacion: false,
                 baja: true
             },
@@ -1637,7 +1640,7 @@
                 tipo: "Incumplimiento WIN",
                 motivos: ["Gestión Visita Técnica", "Gestión Instalación", "Gestión Ventas", "Gestión ATC", "Gestión Fidelización", "Negociación Interrumpida"],
                 descripcion: "Registro de baja porque alguna de las áreas operativas de WIN incumplió con los ofrecimientos u ofertas prometidas al cliente.",
-                observaciones: "|Id: XXXXXXXXXXXXXXXXXXXXX |\n|COD PEDIDO|",
+                observaciones: "|Id: XXXXXXXXXXXXXXXXXXXXX |\n|COD PEDIDO|\n|Herramientas de retención|",
                 fidelizacion: false,
                 baja: true
             },
@@ -1649,7 +1652,7 @@
                 tipo: "Motivos Económicos",
                 motivos: ["Solicita prórroga de pago", "No puede pagar el total de recibo", "Se quedó sin trabajo", "Renovación de beneficio", "Cliente en desacuerdo con costo del plan/SVA", "Negociación Interrumpida"],
                 descripcion: "Registro de baja sustentado en inconvenientes financieros del usuario o imposibilidad de solventar el costo regular.",
-                observaciones: "|Id: XXXXXXXXXXXXXXXXXXXXX |\n|COD PEDIDO|",
+                observaciones: "|Id: XXXXXXXXXXXXXXXXXXXXX |\n|COD PEDIDO|\n|Herramientas de retención|",
                 fidelizacion: false,
                 baja: true
             },
@@ -1661,7 +1664,7 @@
                 tipo: "Mudanza/Viaje",
                 motivos: ["Viaje al extranjero - Indefinido", "Viaje dentro del país - Sin cobertura", "Viaje dentro del país - Con cobertura", "Mudanza - Sin cobertura", "Mudanza - Con cobertura", "Mudanza - Sin facilidades técnicas", "Mudanza - Ya cuenta con Win", "Viaje dentro del país - No indica destino", "Mudanza - No indica destino", "Negociación Interrumpida"],
                 descripcion: "Registro de baja justificado por el cambio de domicilio o viaje fuera de la zona de cobertura técnica de WIN.",
-                observaciones: "|Id: XXXXXXXXXXXXXXXXXXXXX |\n|COD PEDIDO|",
+                observaciones: "|Id: XXXXXXXXXXXXXXXXXXXXX |\n|COD PEDIDO|\n|Herramientas de retención|",
                 fidelizacion: false,
                 baja: true
             },
@@ -1673,7 +1676,7 @@
                 tipo: "Problemas con el servicio",
                 motivos: ["Intermitencia en la señal", "Insatisfecho con la velocidad", "Pérdida Total del Servicio", "Problemas de WIFI", "No llega ancho de banda", "Problemas con juegos/Latencia", "Sin acceso a páginas/Aplicaciones externas", "Reincidencia en problema técnico", "Lentitud de señal", "Negociación Interrumpida"],
                 descripcion: "Registro de baja motivado por problemas técnicos no resueltos, lentitud, intermitencia o inconformidad del wifi.",
-                observaciones: "|Id: XXXXXXXXXXXXXXXXXXXXX |\n|COD PEDIDO|",
+                observaciones: "|Id: XXXXXXXXXXXXXXXXXXXXX |\n|COD PEDIDO|\n|Herramientas de retención|",
                 fidelizacion: false,
                 baja: true
             },
@@ -1691,7 +1694,7 @@
                     "WIN BOX - No se entregó equipo", "WIN BOX - No se instaló equipo", "WIN BOX - Inconvenientes con Uso", "Negociación Interrumpida"
                 ],
                 descripcion: "Registro de baja provocado por incidencias críticas con servicios de valor agregado contratados (DGO, Win TV, FonoWin, Mesh, Winbox).",
-                observaciones: "|Id: XXXXXXXXXXXXXXXXXXXXX |\n|COD PEDIDO|",
+                observaciones: "|Id: XXXXXXXXXXXXXXXXXXXXX |\n|COD PEDIDO|\n|Herramientas de retención|",
                 fidelizacion: false,
                 baja: true
             },
@@ -1703,7 +1706,7 @@
                 tipo: "Problemas Personales",
                 motivos: ["Problemas de salud", "Problemas familiares", "Regreso Trabajo presencial", "Problemas Personales sin dar detalle", "Robo", "Incendio / Desastre Natural", "Fallecimiento del Titular", "Negociación Interrumpida"],
                 descripcion: "Registro de baja motivado por causas externas, de fuerza mayor, cambio de modalidad de trabajo o fallecimiento del titular de la cuenta.",
-                observaciones: "|Id: XXXXXXXXXXXXXXXXXXXXX |\n|COD PEDIDO|",
+                observaciones: "|Id: XXXXXXXXXXXXXXXXXXXXX |\n|COD PEDIDO|\n|Herramientas de retención|",
                 fidelizacion: false,
                 baja: true
             },
@@ -3355,7 +3358,7 @@ Por favor, proporciona esta clave al asesor que te está atendiendo para que pod
             }
         });
 
-        // Limpiar formulario
+        // Limpiar formulario y registro
         function cleanSimulation() {
             elSysDocSearch.value = '';
             elSysContactPhone.value = '';
@@ -3367,33 +3370,48 @@ Por favor, proporciona esta clave al asesor que te está atendiendo para que pod
             selectedTipification = null;
             elDetailPanel.classList.add('hidden');
             elCalculatorSection.classList.add('hidden');
+
+            // Ocultar módulos dinámicos si están visibles
+            const modAjustes = document.getElementById('module-ajustes');
+            if (modAjustes) modAjustes.classList.add('hidden');
+            const modBeneficios = document.getElementById('module-beneficios');
+            if (modBeneficios) modBeneficios.classList.add('hidden');
+
+            // Limpiar campos de ajustes si existen
+            ['ajuste-id', 'ajuste-cod-pedido', 'ajuste-nro-recibo', 'ajuste-monto-dev', 'ajuste-cant-meses', 'ajuste-obs'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.value = '';
+            });
+            ['ajuste-mes-inicio', 'ajuste-tipo', 'ajuste-motivo-dev', 'ajuste-submotivo-dev', 'ajuste-aprobador', 'ajuste-area'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.value = '';
+            });
+            const elPct = document.getElementById('ajuste-pct-devolucion');
+            if (elPct) elPct.value = '0';
+            const elImp = document.getElementById('ajuste-importe');
+            if (elImp) elImp.value = '0';
+            const elDev = document.getElementById('ajuste-lbl-devolver');
+            if (elDev) elDev.textContent = 'S/ 0.00';
+            const elPag = document.getElementById('ajuste-lbl-pagar');
+            if (elPag) elPag.textContent = 'S/ 0.00';
+
             renderTipifications('');
-            showToast('Formulario limpio.', 'success');
+            showToast('Registro y formulario limpiados correctamente.', 'info');
         }
 
-        // Copiar el registro del CRM completo
+        // Copiar exclusivamente la plantilla / observaciones
+        function copiarPlantilla() {
+            const plantilla = elSysObservaciones ? elSysObservaciones.value.trim() : '';
+            if (!plantilla) {
+                showToast('No hay contenido en la plantilla para copiar.', 'warning');
+                return;
+            }
+            copyToClipboard(plantilla, '¡Plantilla copiada correctamente!');
+        }
+
+        // Copiar el registro del CRM completo (función heredada)
         function copyFullRegistration() {
-            const docType = elSysDocType.value;
-            const docNum = elSysDocSearch.value.trim() || 'No ingresado';
-            const phone = elSysContactPhone.value.trim() || 'No ingresado';
-            const category = elSysCategoryText.textContent;
-            const medio = elSysMedio.value || 'No seleccionado';
-            const tipo = elSysTipo.value || 'No seleccionado';
-            const motivo = elSysMotivo.value || 'No seleccionado';
-            const observaciones = elSysObservaciones.value.trim() || 'Sin observaciones';
-
-            const summary = `--- REGISTRO DE LLAMADA RECIBIDA ---
-Tipo de Doc: ${docType}
-Número de Doc: ${docNum}
-Contacto: ${phone}
-Flujo Categoría: ${category}
-Medio: ${medio}
-Tipo: ${tipo}
-Motivo: ${motivo}
-Observaciones CRM:
-${observaciones}`;
-
-            copyToClipboard(summary, '¡Registro de CRM completo copiado!');
+            copiarPlantilla();
         }
 
         // Buscador Inteligente
@@ -3673,95 +3691,95 @@ ${observaciones}`;
                 },
                 "FIDELIZACION BAJAS": {
                     "CLIENTES NO GESTIONABLES": {
-                        "Reclamos": "|Id: XXXXXXXXXXXXXXXX||COD PEDIDO|",
-                        "Fraude": "|Id: XXXXXXXXXXXXXXXX||COD PEDIDO|",
-                        "Usuarios": "|Id: XXXXXXXXXXXXXXXX||COD PEDIDO|",
-                        "Instalación no concretada / incompleta": "|Id: XXXXXXXXXXXXXXXX||COD PEDIDO|",
-                        "Convenio": "|Id: XXXXXXXXXXXXXXXX||COD PEDIDO|",
-                        "Cliente Suspendido": "|Id: XXXXXXXXXXXXXXXX||COD PEDIDO|"
+                        "Reclamos": "|Id: XXXXXXXXXXXXXXXXXXXXX ||COD PEDIDO||Herramientas de retención|",
+                        "Fraude": "|Id: XXXXXXXXXXXXXXXXXXXXX ||COD PEDIDO||Herramientas de retención|",
+                        "Usuarios": "|Id: XXXXXXXXXXXXXXXXXXXXX ||COD PEDIDO||Herramientas de retención|",
+                        "Instalación no concretada / incompleta": "|Id: XXXXXXXXXXXXXXXXXXXXX ||COD PEDIDO||Herramientas de retención|",
+                        "Convenio": "|Id: XXXXXXXXXXXXXXXXXXXXX ||COD PEDIDO||Herramientas de retención|",
+                        "Cliente Suspendido": "|Id: XXXXXXXXXXXXXXXXXXXXX ||COD PEDIDO||Herramientas de retención|"
                     },
                     "COMPETENCIA": {
-                        "CLARO": "|Id: XXXXXXXXXXXXXXXX||COD PEDIDO|",
-                        "MOVISTAR": "|Id: XXXXXXXXXXXXXXXX||COD PEDIDO|",
-                        "DIRECTV": "|Id: XXXXXXXXXXXXXXXX||COD PEDIDO|",
-                        "ENTEL": "|Id: XXXXXXXXXXXXXXXX||COD PEDIDO|",
-                        "WOW": "|Id: XXXXXXXXXXXXXXXX||COD PEDIDO|",
-                        "No menciona/Otra empresa": "|Id: XXXXXXXXXXXXXXXX||COD PEDIDO|",
-                        "BANTEL": "|Id: XXXXXXXXXXXXXXXX||COD PEDIDO|",
-                        "BITEL": "|Id: XXXXXXXXXXXXXXXX||COD PEDIDO|",
-                        "MIFIBRA": "|Id: XXXXXXXXXXXXXXXX||COD PEDIDO|",
-                        "FIBERPRO": "|Id: XXXXXXXXXXXXXXXX||COD PEDIDO|",
-                        "NUBYX": "|Id: XXXXXXXXXXXXXXXX||COD PEDIDO|",
-                        "WIN NEGOCIOS/EMPRESAS": "|Id: XXXXXXXXXXXXXXXX||COD PEDIDO|",
-                        "Negociación Interrumpida": "|Id: XXXXXXXXXXXXXXXX||COD PEDIDO|"
+                        "CLARO": "|Id: XXXXXXXXXXXXXXXXXXXXX ||COD PEDIDO||Herramientas de retención|",
+                        "MOVISTAR": "|Id: XXXXXXXXXXXXXXXXXXXXX ||COD PEDIDO||Herramientas de retención|",
+                        "DIRECTV": "|Id: XXXXXXXXXXXXXXXXXXXXX ||COD PEDIDO||Herramientas de retención|",
+                        "ENTEL": "|Id: XXXXXXXXXXXXXXXXXXXXX ||COD PEDIDO||Herramientas de retención|",
+                        "WOW": "|Id: XXXXXXXXXXXXXXXXXXXXX ||COD PEDIDO||Herramientas de retención|",
+                        "No menciona/Otra empresa": "|Id: XXXXXXXXXXXXXXXXXXXXX ||COD PEDIDO||Herramientas de retención|",
+                        "BANTEL": "|Id: XXXXXXXXXXXXXXXXXXXXX ||COD PEDIDO||Herramientas de retención|",
+                        "BITEL": "|Id: XXXXXXXXXXXXXXXXXXXXX ||COD PEDIDO||Herramientas de retención|",
+                        "MIFIBRA": "|Id: XXXXXXXXXXXXXXXXXXXXX ||COD PEDIDO||Herramientas de retención|",
+                        "FIBERPRO": "|Id: XXXXXXXXXXXXXXXXXXXXX ||COD PEDIDO||Herramientas de retención|",
+                        "NUBYX": "|Id: XXXXXXXXXXXXXXXXXXXXX ||COD PEDIDO||Herramientas de retención|",
+                        "WIN NEGOCIOS/EMPRESAS": "|Id: XXXXXXXXXXXXXXXXXXXXX ||COD PEDIDO||Herramientas de retención|",
+                        "Negociación Interrumpida": "|Id: XXXXXXXXXXXXXXXXXXXXX ||COD PEDIDO||Herramientas de retención|"
                     },
                     "FACTURACIÓN": {
-                        "Cobro de prorrateo / cuota instalación": "|Id: XXXXXXXXXXXXXXXX||COD PEDIDO|",
-                        "Demora en emisión recibo": "|Id: XXXXXXXXXXXXXXXX||COD PEDIDO|",
-                        "Ajuste/Descuento/Devolución no realizado": "|Id: XXXXXXXXXXXXXXXX||COD PEDIDO|",
-                        "No reconoce monto": "|Id: XXXXXXXXXXXXXXXX||COD PEDIDO|",
-                        "Error en el cargo fijo": "|Id: XXXXXXXXXXXXXXXX||COD PEDIDO|",
-                        "Se facturó estando suspendido el servicio": "|Id: XXXXXXXXXXXXXXXX||COD PEDIDO|",
-                        "No reconoce cargos por servicios solicitados": "|Id: XXXXXXXXXXXXXXXX||COD PEDIDO|",
-                        "No envío de recibo": "|Id: XXXXXXXXXXXXXXXX||COD PEDIDO|",
-                        "Negociación Interrumpida": "|Id: XXXXXXXXXXXXXXXX||COD PEDIDO|"
+                        "Cobro de prorrateo / cuota instalación": "|Id: XXXXXXXXXXXXXXXXXXXXX ||COD PEDIDO||Herramientas de retención|",
+                        "Demora en emisión recibo": "|Id: XXXXXXXXXXXXXXXXXXXXX ||COD PEDIDO||Herramientas de retención|",
+                        "Ajuste/Descuento/Devolución no realizado": "|Id: XXXXXXXXXXXXXXXXXXXXX ||COD PEDIDO||Herramientas de retención|",
+                        "No reconoce monto": "|Id: XXXXXXXXXXXXXXXXXXXXX ||COD PEDIDO||Herramientas de retención|",
+                        "Error en el cargo fijo": "|Id: XXXXXXXXXXXXXXXXXXXXX ||COD PEDIDO||Herramientas de retención|",
+                        "Se facturó estando suspendido el servicio": "|Id: XXXXXXXXXXXXXXXXXXXXX ||COD PEDIDO||Herramientas de retención|",
+                        "No reconoce cargos por servicios solicitados": "|Id: XXXXXXXXXXXXXXXXXXXXX ||COD PEDIDO||Herramientas de retención|",
+                        "No envío de recibo": "|Id: XXXXXXXXXXXXXXXXXXXXX ||COD PEDIDO||Herramientas de retención|",
+                        "Negociación Interrumpida": "|Id: XXXXXXXXXXXXXXXXXXXXX ||COD PEDIDO||Herramientas de retención|"
                     },
                     "FLIPPING": {
-                        "A NOMBRE DEL MISMO CLIENTE": "|Id: XXXXXXXXXXXXXXXX||COD PEDIDO|",
-                        "A NOMBRE DE UN FAMILIAR / AMIGO": "|Id: XXXXXXXXXXXXXXXX||COD PEDIDO|"
+                        "A NOMBRE DEL MISMO CLIENTE": "|Id: XXXXXXXXXXXXXXXXXXXXX ||COD PEDIDO||Herramientas de retención|",
+                        "A NOMBRE DE UN FAMILIAR / AMIGO": "|Id: XXXXXXXXXXXXXXXXXXXXX ||COD PEDIDO||Herramientas de retención|"
                     },
                     "INCUMPLIMIENTO WIN": {
-                        "Gestión Visita Técnica": "|Id: XXXXXXXXXXXXXXXX||COD PEDIDO|",
-                        "Gestión Instalación": "|Id: XXXXXXXXXXXXXXXX||COD PEDIDO|",
-                        "Gestión Ventas": "|Id: XXXXXXXXXXXXXXXX||COD PEDIDO|",
-                        "Gestión ATC": "|Id: XXXXXXXXXXXXXXXX||COD PEDIDO|",
-                        "Gestión Fidelización": "|Id: XXXXXXXXXXXXXXXX||COD PEDIDO|",
-                        "Negociación Interrumpida": "|Id: XXXXXXXXXXXXXXXX||COD PEDIDO|"
+                        "Gestión Visita Técnica": "|Id: XXXXXXXXXXXXXXXXXXXXX ||COD PEDIDO||Herramientas de retención|",
+                        "Gestión Instalación": "|Id: XXXXXXXXXXXXXXXXXXXXX ||COD PEDIDO||Herramientas de retención|",
+                        "Gestión Ventas": "|Id: XXXXXXXXXXXXXXXXXXXXX ||COD PEDIDO||Herramientas de retención|",
+                        "Gestión ATC": "|Id: XXXXXXXXXXXXXXXXXXXXX ||COD PEDIDO||Herramientas de retención|",
+                        "Gestión Fidelización": "|Id: XXXXXXXXXXXXXXXXXXXXX ||COD PEDIDO||Herramientas de retención|",
+                        "Negociación Interrumpida": "|Id: XXXXXXXXXXXXXXXXXXXXX ||COD PEDIDO||Herramientas de retención|"
                     },
                     "MOTIVOS ECONÓMICOS": {
-                        "Solicita prórroga de pago": "|Id: XXXXXXXXXXXXXXXX||COD PEDIDO|",
-                        "No puede pagar el total de recibo": "|Id: XXXXXXXXXXXXXXXX||COD PEDIDO|",
-                        "Se quedó sin trabajo": "|Id: XXXXXXXXXXXXXXXX||COD PEDIDO|",
-                        "Renovación de beneficio": "|Id: XXXXXXXXXXXXXXXX||COD PEDIDO|",
-                        "Cliente en desacuerdo con costo del plan/SVA": "|Id: XXXXXXXXXXXXXXXX||COD PEDIDO|",
-                        "Negociación Interrumpida": "|Id: XXXXXXXXXXXXXXXX||COD PEDIDO|"
+                        "Solicita prórroga de pago": "|Id: XXXXXXXXXXXXXXXXXXXXX ||COD PEDIDO||Herramientas de retención|",
+                        "No puede pagar el total de recibo": "|Id: XXXXXXXXXXXXXXXXXXXXX ||COD PEDIDO||Herramientas de retención|",
+                        "Se quedó sin trabajo": "|Id: XXXXXXXXXXXXXXXXXXXXX ||COD PEDIDO||Herramientas de retención|",
+                        "Renovación de beneficio": "|Id: XXXXXXXXXXXXXXXXXXXXX ||COD PEDIDO||Herramientas de retención|",
+                        "Cliente en desacuerdo con costo del plan/SVA": "|Id: XXXXXXXXXXXXXXXXXXXXX ||COD PEDIDO||Herramientas de retención|",
+                        "Negociación Interrumpida": "|Id: XXXXXXXXXXXXXXXXXXXXX ||COD PEDIDO||Herramientas de retención|"
                     },
                     "MUDANZA/VIAJE": {
-                        "Viaje al extranjero - Indefinido": "|Id: XXXXXXXXXXXXXXXX||COD PEDIDO|",
-                        "Viaje dentro del país - Sin cobertura": "|Id: XXXXXXXXXXXXXXXX||COD PEDIDO|",
-                        "Viaje dentro del país - Con cobertura": "|Id: XXXXXXXXXXXXXXXX||COD PEDIDO|",
-                        "Mudanza - Sin cobertura": "|Id: XXXXXXXXXXXXXXXX||COD PEDIDO|",
-                        "Mudanza - Con cobertura": "|Id: XXXXXXXXXXXXXXXX||COD PEDIDO|",
-                        "Mudanza - Sin facilidades técnicas": "|Id: XXXXXXXXXXXXXXXX||COD PEDIDO|",
-                        "Mudanza - Ya cuenta con Win": "|Id: XXXXXXXXXXXXXXXX||COD PEDIDO|",
-                        "Viaje dentro del país - No indica destino": "|Id: XXXXXXXXXXXXXXXX||COD PEDIDO|",
-                        "Mudanza - No indica destino": "|Id: XXXXXXXXXXXXXXXX||COD PEDIDO|",
-                        "Negociación Interrumpida": "|Id: XXXXXXXXXXXXXXXX||COD PEDIDO|"
+                        "Viaje al extranjero - Indefinido": "|Id: XXXXXXXXXXXXXXXXXXXXX ||COD PEDIDO||Herramientas de retención|",
+                        "Viaje dentro del país - Sin cobertura": "|Id: XXXXXXXXXXXXXXXXXXXXX ||COD PEDIDO||Herramientas de retención|",
+                        "Viaje dentro del país - Con cobertura": "|Id: XXXXXXXXXXXXXXXXXXXXX ||COD PEDIDO||Herramientas de retención|",
+                        "Mudanza - Sin cobertura": "|Id: XXXXXXXXXXXXXXXXXXXXX ||COD PEDIDO||Herramientas de retención|",
+                        "Mudanza - Con cobertura": "|Id: XXXXXXXXXXXXXXXXXXXXX ||COD PEDIDO||Herramientas de retención|",
+                        "Mudanza - Sin facilidades técnicas": "|Id: XXXXXXXXXXXXXXXXXXXXX ||COD PEDIDO||Herramientas de retención|",
+                        "Mudanza - Ya cuenta con Win": "|Id: XXXXXXXXXXXXXXXXXXXXX ||COD PEDIDO||Herramientas de retención|",
+                        "Viaje dentro del país - No indica destino": "|Id: XXXXXXXXXXXXXXXXXXXXX ||COD PEDIDO||Herramientas de retención|",
+                        "Mudanza - No indica destino": "|Id: XXXXXXXXXXXXXXXXXXXXX ||COD PEDIDO||Herramientas de retención|",
+                        "Negociación Interrumpida": "|Id: XXXXXXXXXXXXXXXXXXXXX ||COD PEDIDO||Herramientas de retención|"
                     },
                     "PROBLEMAS CON EL SERVICIO": {
-                        "Intermitencia en la señal": "|Id: XXXXXXXXXXXXXXXX||COD PEDIDO|",
-                        "Insatisfecho con la velocidad": "|Id: XXXXXXXXXXXXXXXX||COD PEDIDO|",
-                        "Pérdida Total del Servicio": "|Id: XXXXXXXXXXXXXXXX||COD PEDIDO|",
-                        "Problemas de WIFI": "|Id: XXXXXXXXXXXXXXXX||COD PEDIDO|",
-                        "No llega ancho de banda": "|Id: XXXXXXXXXXXXXXXX||COD PEDIDO|",
-                        "Problemas con juegos/Latencia": "|Id: XXXXXXXXXXXXXXXX||COD PEDIDO|",
-                        "Sin acceso a páginas/Aplicaciones externas": "|Id: XXXXXXXXXXXXXXXX||COD PEDIDO|",
-                        "Reincidencia en problema técnico": "|Id: XXXXXXXXXXXXXXXX||COD PEDIDO|",
-                        "Lentitud de señal": "|Id: XXXXXXXXXXXXXXXX||COD PEDIDO|",
-                        "Negociación Interrumpida": "|Id: XXXXXXXXXXXXXXXX||COD PEDIDO|"
+                        "Intermitencia en la señal": "|Id: XXXXXXXXXXXXXXXXXXXXX ||COD PEDIDO||Herramientas de retención|",
+                        "Insatisfecho con la velocidad": "|Id: XXXXXXXXXXXXXXXXXXXXX ||COD PEDIDO||Herramientas de retención|",
+                        "Pérdida Total del Servicio": "|Id: XXXXXXXXXXXXXXXXXXXXX ||COD PEDIDO||Herramientas de retención|",
+                        "Problemas de WIFI": "|Id: XXXXXXXXXXXXXXXXXXXXX ||COD PEDIDO||Herramientas de retención|",
+                        "No llega ancho de banda": "|Id: XXXXXXXXXXXXXXXXXXXXX ||COD PEDIDO||Herramientas de retención|",
+                        "Problemas con juegos/Latencia": "|Id: XXXXXXXXXXXXXXXXXXXXX ||COD PEDIDO||Herramientas de retención|",
+                        "Sin acceso a páginas/Aplicaciones externas": "|Id: XXXXXXXXXXXXXXXXXXXXX ||COD PEDIDO||Herramientas de retención|",
+                        "Reincidencia en problema técnico": "|Id: XXXXXXXXXXXXXXXXXXXXX ||COD PEDIDO||Herramientas de retención|",
+                        "Lentitud de señal": "|Id: XXXXXXXXXXXXXXXXXXXXX ||COD PEDIDO||Herramientas de retención|",
+                        "Negociación Interrumpida": "|Id: XXXXXXXXXXXXXXXXXXXXX ||COD PEDIDO||Herramientas de retención|"
                     },
                     "PROBLEMAS CON SVA": {
-                        "Mantener todos los motivos del documento": "|Id: XXXXXXXXXXXXXXXX||COD PEDIDO|"
+                        "Mantener todos los motivos del documento": "|Id: XXXXXXXXXXXXXXXXXXXXX ||COD PEDIDO||Herramientas de retención|"
                     },
                     "PROBLEMAS PERSONALES": {
-                        "Problemas de salud": "|Id: XXXXXXXXXXXXXXXX||COD PEDIDO|",
-                        "Problemas familiares": "|Id: XXXXXXXXXXXXXXXX||COD PEDIDO|",
-                        "Regreso trabajo presencial": "|Id: XXXXXXXXXXXXXXXX||COD PEDIDO|",
-                        "Problemas personales sin dar detalle": "|Id: XXXXXXXXXXXXXXXX||COD PEDIDO|",
-                        "Robo": "|Id: XXXXXXXXXXXXXXXX||COD PEDIDO|",
-                        "Incendio / Desastre natural": "|Id: XXXXXXXXXXXXXXXX||COD PEDIDO|",
-                        "Fallecimiento del titular": "|Id: XXXXXXXXXXXXXXXX||COD PEDIDO|",
-                        "Negociación Interrumpida": "|Id: XXXXXXXXXXXXXXXX||COD PEDIDO|"
+                        "Problemas de salud": "|Id: XXXXXXXXXXXXXXXXXXXXX ||COD PEDIDO||Herramientas de retención|",
+                        "Problemas familiares": "|Id: XXXXXXXXXXXXXXXXXXXXX ||COD PEDIDO||Herramientas de retención|",
+                        "Regreso trabajo presencial": "|Id: XXXXXXXXXXXXXXXXXXXXX ||COD PEDIDO||Herramientas de retención|",
+                        "Problemas personales sin dar detalle": "|Id: XXXXXXXXXXXXXXXXXXXXX ||COD PEDIDO||Herramientas de retención|",
+                        "Robo": "|Id: XXXXXXXXXXXXXXXXXXXXX ||COD PEDIDO||Herramientas de retención|",
+                        "Incendio / Desastre natural": "|Id: XXXXXXXXXXXXXXXXXXXXX ||COD PEDIDO||Herramientas de retención|",
+                        "Fallecimiento del titular": "|Id: XXXXXXXXXXXXXXXXXXXXX ||COD PEDIDO||Herramientas de retención|",
+                        "Negociación Interrumpida": "|Id: XXXXXXXXXXXXXXXXXXXXX ||COD PEDIDO||Herramientas de retención|"
                     }
                 },
                 "FIDELIZACION CANCELACIÓN": {
